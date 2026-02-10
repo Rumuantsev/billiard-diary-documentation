@@ -1,0 +1,38 @@
+site_name: Документация бильярдного дневника
+site_url: https://rumuantsev.github.io/billiard-diary-documentation/
+site_author: Rumuantsev Arseniy
+repo_name: Rumuantsev/billiard-diary-documentation
+repo_url: https://github.com/Rumuantsev/billiard-diary-documentation
+
+theme:
+  name: material
+  palette:
+    # scheme: light blue
+    # Palette toggle for light mode
+    - primary: light
+      toggle:
+        icon: material/brightness-7
+        name: Перейти на тёмную сторону
+
+    # Palette toggle for dark mode
+    - scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Перейти на светлую сторону
+  language: ru
+  features:
+    - content.code.copy
+  custom_dir: overrides
+plugins:
+  - swagger-ui-tag
+markdown_extensions:
+  - attr_list
+  - md_in_html
+  - pymdownx.blocks.caption
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences

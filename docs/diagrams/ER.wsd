@@ -1,0 +1,81 @@
+@startuml
+
+entity User {
+  id : integer
+  --
+  name : varchar
+}
+
+entity Post {
+  id : integer
+  --
+  title : varchar
+  body : text
+  postType : enum (QUESTION, ANSWER)
+  author_id : integer
+  parent_id : integer
+  answer_id : integer
+  created : timestamp
+  update : timestamp
+}
+
+entity Comment {
+  id : integer
+  --
+  body : text
+  author_id : integer
+  post_id : integer
+  created : timestamp
+  update : timestamp
+}
+
+entity Vote {
+  id : integer
+  --
+  author_id : integer
+  post_id : integer
+  created : timestamp
+  type : enum (POSITIVE, NEGATIVE)
+}
+
+entity Tag {
+  id : integer
+  --
+  name : varchar
+  post_id : integer
+}
+
+entity PostSubscribe {
+  post_id : integer
+  user_id : integer
+}
+
+entity TagSubscribe {
+  tag_id : integer
+  user_id : integer
+}
+
+' Основные связи
+User ||--o{ Post
+User ||--o{ Comment
+User ||--o{ Vote
+
+Post ||--o{ Comment
+Post ||--o{ Vote
+Post ||--o{ Tag
+
+' Самосвязи Post
+Post }o--|| Post
+Post }o--|| Post
+
+' Подписки
+Post ||--o{ PostSubscribe
+User ||--o{ PostSubscribe
+
+Tag ||--o{ TagSubscribe
+User ||--o{ TagSubscribe
+
+
+Comment ||--o{ Vote
+
+@enduml
