@@ -1,0 +1,131 @@
+@startuml
+
+' Abstract class User
+abstract class User {
+  +id: bigint
+  +email: varchar
+  +password_hash: varchar
+  +last_name: varchar
+  +first_name: varchar
+  +middle_name: varchar
+  +birth_date: date
+  +created_at: timestamptz
+  +updated_at: timestamptz
+  +deleted_at: timestamptz?
+}
+
+class Coach {
+}
+
+class Athlete {
+}
+
+class Group {
+  +id: bigint
+  +name: varchar
+  +description: text?
+  +created_at: timestamptz
+  +updated_at: timestamptz
+  +deleted_at: timestamptz?
+}
+
+class Exercise {
+  +id: bigint
+  +name: varchar
+  +description: text
+  +required_reps: int
+  +success_threshold: int
+  +is_public: boolean
+  +created_at: timestamptz
+  +updated_at: timestamptz
+  +deleted_at: timestamptz?
+}
+
+class Position {
+  +id: bigint
+  +layout: jsonb
+  +power: int
+  +created_at: timestamptz
+  +updated_at: timestamptz
+}
+
+class Folder {
+  +id: bigint
+  +name: varchar
+  +created_at: timestamptz
+  +updated_at: timestamptz
+}
+
+class Workout {
+  +id: bigint
+  +date: date
+  +created_at: timestamptz
+  +updated_at: timestamptz
+}
+
+class WorkoutItem {
+  +id: bigint
+  +order_index: int
+  +result: int
+  +max_value: int
+  +pass_threshold: int
+}
+
+class Comment {
+  +id: bigint
+  +target_type: enum {workout, workout_item}
+  +text: text
+  +created_at: timestamptz
+  +updated_at: timestamptz
+  +deleted_at: timestamptz?
+}
+
+class Attendance {
+  +id: bigint
+  +date: date
+  +status: enum {present, absent, late}
+  +reason: text?
+  +created_at: timestamptz
+}
+
+' Inheritance
+User <|-- Coach
+User <|-- Athlete
+
+' Composition: Position is part of Exercise
+Exercise *-- Position 
+
+' Composition: WorkoutItem is part of Workout
+Workout *-- WorkoutItem 
+
+' Aggregation: Folder contains exercises
+Folder o-- Exercise 
+
+' Aggregation: Group unites athletes
+Group "1" o-- "0..*" Athlete 
+
+' Associations for Coach
+Coach "1" -- "0..*" Exercise 
+Coach "1" -- "0..*" Workout 
+Coach "1" -- "0..*" Group 
+Coach "1" -- "0..*" Folder 
+
+' Associations for Athlete
+Athlete "1" -- "0..*" Workout
+Athlete "1" -- "0..*" Attendance 
+
+' Associations for Comment
+Coach "1" -- "0..*" Comment 
+Athlete "1" -- "0..*" Comment
+
+' Associations for WorkoutItem
+Exercise "1" -- "0..*" WorkoutItem 
+
+' Polymorphic associations for Comment
+Comment --> Workout 
+Comment --> WorkoutItem 
+
+' Recursive relationship for folders
+Folder --> "parent" Folder
+
+@enduml

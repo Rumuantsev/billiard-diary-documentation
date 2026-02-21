@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://rumuantsev.github.io/billiard-diary-documentation/%D0%9C%D0%BE%D0%B4%D0%B5%D0%BB%D1%8C%20%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D1%85/">
       
       
-        <link rel="prev" href="../OpenAPI/">
+        <link rel="prev" href="../%D0%9A%D0%BB%D0%B0%D1%81%D1%81%D1%8B/">
       
       
         <link rel="next" href="../%D0%A2%D1%80%D0%B5%D0%B1%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F/1glossary/">
@@ -74,11 +74,6 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
-      
-        
-        <a href="#position" class="md-skip">
-          Перейти к содержанию
-        </a>
       
     </div>
     <div data-md-component="announce">
@@ -259,6 +254,28 @@
       
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../%D0%9A%D0%BB%D0%B0%D1%81%D1%81%D1%8B/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Классы
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
     
   
   
@@ -268,19 +285,6 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    Модель данных
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -293,32 +297,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Содержание">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Содержание
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#position" class="md-nav__link">
-    <span class="md-ellipsis">
-      Position (Позиция)
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
       
     </li>
   
@@ -339,10 +317,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   
@@ -355,8 +333,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             Требования
           </label>
@@ -375,6 +353,29 @@
   
   <span class="md-ellipsis">
     Глоссарий
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%D0%A2%D1%80%D0%B5%D0%B1%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F/1user-requirement/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Пользовательские требования
     
   </span>
   
@@ -433,23 +434,6 @@
   
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Содержание
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#position" class="md-nav__link">
-    <span class="md-ellipsis">
-      Position (Позиция)
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -469,18 +453,15 @@
 
   <h1>Модель данных</h1>
 
-<h2 id="position">Position (Позиция)</h2>
-<ul>
-<li><strong>id</strong> : SERIAL (PRIMARY KEY) - идентификатор позиции</li>
-<li><strong>layout</strong> : JSONB (NOT NULL) - данные о позиции, расположение и тип элементов</li>
-<li><strong>power</strong> : DOUBLE PRECISION - сила удара</li>
-<li><strong>created_at</strong> : TIMESTAMP (DEFAULT now()) - дата и время создания</li>
-<li><strong>updated_at</strong> : TIMESTAMP (DEFAULT now()) - дата и время обновления</li>
-</ul>
 <figure>
-    <img align="center" alt="Модель данных" src="../out/diagrams/ER/DB.png" />
+    <img align="center" alt="Модель данных" src="out/diagrams/ER/ER RU.png" />
 <br />
-<figcaption>ER диаграмма</figcaption>
+<figcaption>ER диаграмма RU</figcaption>
+</figure>
+<figure>
+    <img align="center" alt="Модель данных" src="out/diagrams/ER/ER EN.png" />
+<br />
+<figcaption>ER диаграмма EN</figcaption>
 </figure>
 
 
