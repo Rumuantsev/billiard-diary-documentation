@@ -1,0 +1,93 @@
+@startuml
+left to right direction
+skinparam usecase {
+  BackgroundColor White
+  BorderColor Black
+  ArrowColor Black
+}
+
+actor "Тренер" as coach
+actor "Спортсмен" as athlete
+
+rectangle "Электронный дневник бильярдиста" {
+
+  package "Управление спортсменами и группами" {
+    usecase "Добавить спортсмена" as UC1_1
+    usecase "Объединить в группы" as UC1_2
+    usecase "Отметить посещаемость" as UC1_3
+  }
+
+  package "Работа с упражнениями" {
+    usecase "Создать упражнение в редакторе" as UC2_1
+    usecase "Переиспользовать упражнения" as UC2_3
+    usecase "Группировать упражнения по папкам" as UC2_4
+    usecase "Доступ к публичной библиотеке" as UC2_6
+    usecase "Просматривать библиотеку упражнений" as UC2_7
+    usecase "Получать наглядную схему упражнения" as UC2_8
+  }
+
+  package "Назначение тренировок" {
+    usecase "Назначить упражнение спортсмену" as UC3_1
+    usecase "Указать проходной результат выполнения упражнения" as UC3_2
+  }
+
+  package "Фиксация и просмотр результатов" {
+    usecase "Ввести результат (забил/не забил)" as UC4_1
+    usecase "Ввести результат (количество)" as UC4_2
+    usecase "Просматривать результаты спортсменов" as UC4_3
+    usecase "Просматривать историю тренировок" as UC4_4
+    usecase "Просматривать свою историю" as UC4_5
+  }
+
+  package "Аналитика и статистика" {
+    usecase "Видеть динамику по результативности" as UC5_1
+    usecase "Видеть статистику по конкретной тренировке" as UC5_2
+    usecase "Видеть статистику по группе" as UC5_3
+    usecase "Автоматический расчёт прогресса" as UC5_4
+    usecase "Сравнивать два периода" as UC5_5
+    usecase "Видеть улучшение" as UC5_7
+  }
+
+  package "Комментарии и обратная связь" {
+    usecase "Фиксировать комментарии к тренировкам" as UC6_1
+    usecase "Просматривать комментарии тренера" as UC6_2
+  }
+
+}
+
+' Связи тренера
+coach --> UC1_1
+coach --> UC1_2
+coach --> UC1_3
+coach --> UC2_1
+coach --> UC2_3
+coach --> UC2_4
+coach --> UC2_6
+coach --> UC3_1
+coach --> UC3_2
+coach --> UC4_3
+coach --> UC4_4
+coach --> UC5_1
+coach --> UC5_3
+coach --> UC5_4
+coach --> UC6_1
+
+' Связи спортсмена
+athlete --> UC2_7
+athlete --> UC2_8
+athlete --> UC3_4
+athlete --> UC4_1
+athlete --> UC4_2
+athlete --> UC4_5
+athlete --> UC5_2
+athlete --> UC5_5
+athlete --> UC5_6
+athlete --> UC5_7
+athlete --> UC6_2
+athlete --> UC6_4
+athlete --> UC6_5
+athlete --> UC7_1
+athlete --> UC7_3
+athlete --> UC8_2
+
+@enduml

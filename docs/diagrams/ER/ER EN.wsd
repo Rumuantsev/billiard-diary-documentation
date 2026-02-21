@@ -1,0 +1,168 @@
+@startuml
+' ER-диаграмма базы данных (PostgreSQL)
+' Все связи заменены на черную закрашенную стрелку -->
+
+' Настройки внешнего вида
+skinparam linetype ortho
+skinparam entity {
+  BackgroundColor White
+  BorderColor Black
+}
+
+' Сущности
+entity "users" as users {
+  + id: bigserial <<PK>>
+  --
+  email: varchar(255) <<unique>>
+  password_hash: varchar(255)
+  last_name: varchar(100)
+  first_name: varchar(100)
+  middle_name: varchar(100)
+  birth_date: date
+  role: user_role
+  created_at: timestamptz
+  updated_at: timestamptz
+  deleted_at: timestamptz
+}
+
+entity "groups" as groups {
+  + id: bigserial <<PK>>
+  --
+  name: varchar(255)
+  coach_id: bigint <<FK>>
+  description: text
+  created_at: timestamptz
+  updated_at: timestamptz
+  deleted_at: timestamptz
+}
+
+entity "group_membership" as group_membership {
+  + athlete_id: bigint <<FK>> <<PK>>
+  + group_id: bigint <<FK>> <<PK>>
+  --
+  joined_at: date
+}
+
+entity "folders" as folders {
+  + id: bigserial <<PK>>
+  --
+  name: varchar(255)
+  owner_id: bigint <<FK>>
+  parent_folder_id: bigint <<FK>>
+  created_at: timestamptz
+  updated_at: timestamptz
+}
+
+entity "exercises" as exercises {
+  + id: bigserial <<PK>>
+  --
+  name: varchar(255)
+  description: text
+  evaluation_type: evaluation_type
+  required_reps: int
+  success_threshold: int
+  is_public: boolean
+  author_id: bigint <<FK>>
+  folder_id: bigint <<FK>>
+  created_at: timestamptz
+  updated_at: timestamptz
+  deleted_at: timestamptz
+}
+
+entity "positions" as positions {
+  + id: bigserial <<PK>>
+  --
+  exercise_id: bigint <<FK>>
+  layout: jsonb
+  power: double precision
+  created_at: timestamptz
+  updated_at: timestamptz
+}
+
+entity "workouts" as workouts {
+  + id: bigserial <<PK>>
+  --
+  date: date
+  athlete_id: bigint <<FK>>
+  coach_id: bigint <<FK>>
+  created_at: timestamptz
+  updated_at: timestamptz
+}
+
+entity "workout_items" as workout_items {
+  + id: bigserial <<PK>>
+  --
+  workout_id: bigint <<FK>>
+  exercise_id: bigint <<FK>>
+  order_index: int
+  result: int
+  max_value: int
+  pass_threshold: int
+  created_at: timestamptz
+  updated_at: timestamptz
+}
+
+entity "comments" as comments {
+  + id: bigserial <<PK>>
+  --
+  author_id: bigint <<FK>>
+  workout_id: bigint <<FK>>
+  workout_item_id: bigint <<FK>>
+  text: text
+  created_at: timestamptz
+  updated_at: timestamptz
+  deleted_at: timestamptz
+}
+
+entity "attendances" as attendances {
+  + id: bigserial <<PK>>
+  --
+  athlete_id: bigint <<FK>>
+  group_id: bigint <<FK>>
+  date: date
+  status: attendance_status
+  reason: text
+  created_at: timestamptz
+}
+
+' Связи (все заменены на черную закрашенную стрелку -->)
+' Это означает "один ко многим" с композицией
+
+users --> groups : "coach_id"
+
+users --> group_membership : "athlete_id"
+
+groups --> group_membership : "group_id"
+
+users --> folders : "owner_id"
+
+folders --> folders : "parent_folder_id"
+
+users --> exercises : "author_id"
+
+folders --> exercises : "folder_id"
+
+exercises --> positions : "exercise_id"
+
+users --> workouts : "athlete_id"
+
+users --> workouts : "coach_id"
+
+workouts --> workout_items : "workout_id"
+
+exercises --> workout_items : "exercise_id"
+
+users --> comments : "author_id"
+
+workouts --> comments : "workout_id"
+
+workout_items --> comments : "workout_item_id"
+
+users --> attendances : "athlete_id"
+
+groups --> attendances : "group_id"
+
+' Примечание: для полиморфной связи комментариев использованы два внешних ключа
+' с ограничением, что только один из них должен быть заполнен.
+
+@enduml
