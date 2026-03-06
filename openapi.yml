@@ -4,19 +4,19 @@ info:
   version: 1.0.0
 
 paths:
-  /positions:
+  /exercises:
     post:
-      tags: [Positions]
-      summary: Создать позицию
+      tags: [Exercises]
+      summary: Создать упражнение
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Position"
+              $ref: "#/components/schemas/Exercise"
       responses:
         "201":
-          description: Position created
+          description: Exercise created
           content:
             application/json:
               schema:
@@ -32,8 +32,8 @@ paths:
                 $ref: "#/components/schemas/Error"
 
     get:
-      tags: [Positions]
-      summary: Получение всех позиций
+      tags: [Exercises]
+      summary: Получение всех упражнений
       responses:
         "200":
           description: Success
@@ -43,10 +43,10 @@ paths:
                 type: object
                 properties:
                   ok: { type: boolean, example: true }
-                  positions:
+                  exercises:
                     type: array
                     items:
-                      $ref: "#/components/schemas/Position"
+                      $ref: "#/components/schemas/Exercise"
         "500":
           description: Database error
           content:
@@ -54,10 +54,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /positions/{id}:
+  /exercises/{id}:
     get:
-      tags: [Positions]
-      summary: Получить позицию по id
+      tags: [Exercises]
+      summary: Получить упражнение по id
       parameters:
         - name: id
           in: path
@@ -72,8 +72,8 @@ paths:
                 type: object
                 properties:
                   ok: { type: boolean, example: true }
-                  position:
-                    $ref: "#/components/schemas/Position"
+                  exercise:
+                    $ref: "#/components/schemas/Exercise"
         "404":
           description: Not found
           content:
@@ -88,8 +88,8 @@ paths:
                 $ref: "#/components/schemas/Error"
 
     put:
-      tags: [Positions]
-      summary: Обновление позиции
+      tags: [Exercises]
+      summary: Обновление упражнения
       parameters:
         - name: id
           in: path
@@ -100,7 +100,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Position"
+              $ref: "#/components/schemas/Exercise"
       responses:
         "200":
           description: Success
@@ -125,8 +125,8 @@ paths:
                 $ref: "#/components/schemas/Error"
 
     delete:
-      tags: [Positions]
-      summary: Удаление позиции
+      tags: [Exercises]
+      summary: Удаление упражнения
       parameters:
         - name: id
           in: path
@@ -150,34 +150,28 @@ paths:
 
 components:
   schemas:
-    Position:
+    Exercise:
       type: object
       required:
-        - layout
-        - power
+        - title
       additionalProperties: false
       properties:
         id:
           type: integer
           readOnly: true
-        layout:
+        title:
+          type: string
+        description:
+          type: string
+        position:
           type: object
-          required:
-            - balls
           additionalProperties: false
           properties:
-            spin:
-              type: object
-              required: [x, y]
-              additionalProperties: false
-              properties:
-                x: { type: number }
-                y: { type: number }
             balls:
               type: array
               items:
                 type: object
-                required: [x, y]
+                required: [x, y, type]
                 additionalProperties: false
                 properties:
                   x: { type: number }
@@ -187,7 +181,7 @@ components:
               type: array
               items:
                 type: object
-                required: [from, to]
+                required: [from, to, type]
                 additionalProperties: false
                 properties:
                   from:
@@ -205,8 +199,15 @@ components:
                       x: { type: number }
                       y: { type: number }
                   type: { type: string }
-        power:
-          type: number
+            spin:
+              type: object
+              required: [x, y]
+              additionalProperties: false
+              properties:
+                x: { type: number }
+                y: { type: number }
+            power:
+              type: number
         created_at:
           type: string
           format: date-time

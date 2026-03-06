@@ -1,0 +1,17 @@
+@startuml
+left to right direction
+actor "Спортсмен" as athlete
+rectangle "Электронный дневник бильярдиста" {
+  usecase "Просматривать схему назначенного упражнения" as UC2_8
+  usecase "Фиксировать результат выполнения упражнения" as UC4_1
+  usecase "Просматривать историю своих тренировок" as UC4_5
+  usecase "Просматривать статистику тренировки" as UC5_2
+  usecase "Просматривать статистику за период" as UC5_5
+}
+
+athlete --> UC2_8
+athlete --> UC4_1
+athlete --> UC4_5
+athlete --> UC5_2
+athlete --> UC5_5
+@enduml
