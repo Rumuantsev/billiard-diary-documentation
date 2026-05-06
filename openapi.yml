@@ -1,232 +1,766 @@
-openapi: 3.0.0
+openapi: 3.0.3
 info:
-  title: Billiard-diary-backend API
+  title: Billiard Diary Backend API
   version: 1.0.0
+  description: REST API for billiard training diary.
+
+servers:
+  - url: http://localhost:3000
+    description: Local development server
+
+tags:
+  - name: Health
+    description: Service status endpoints
+  - name: Auth
+    description: Authentication endpoints
+  - name: Exercises
+    description: Exercise CRUD endpoints
 
 paths:
-  /exercises:
+  /health:
+    get:
+      tags: [Health]
+      summary: Check service health
+      responses:
+        "200":
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+
+  /auth/register:
     post:
-      tags: [Exercises]
-      summary: Создать упражнение
+      tags: [Auth]
+      summary: Register user
+      description: >
+        Bootstrap mode: when users table is empty, the first request may create
+        only an admin. After that, admin may create coaches and coach may create
+        athletes. Existing users must pass a Bearer token.
+      security:
+        - BearerAuth: []
+        - {}
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Exercise"
+              $ref: "#/components/schemas/RegisterRequest"
+            examples:
+              firstAdmin:
+                value:
+                  email: admin@example.com
+                  password: "123"
+                  name: Main Admin
+                  role: admin
+              coachByAdmin:
+                value:
+                  email: coach@example.com
+                  password: "123"
+                  name: Coach Name
+                  role: coach
+              athleteByCoach:
+                value:
+                  email: athlete@example.com
+                  password: "123"
+                  name: Athlete Name
+                  role: athlete
+      responses:
+        "201":
+          description: User registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: Login user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+            example:
+              email: coach@example.com
+              password: "123"
+      responses:
+        "200":
+          description: User authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /auth/me:
+    get:
+      tags: [Auth]
+      summary: Get current user
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Current user returned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /exercises:
+    get:
+      tags: [Exercises]
+      summary: Get exercises
+      description: >
+        Requires authentication. Admin sees all non-deleted exercises. Coach sees
+        only own exercises. Athlete cannot access exercises directly.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: search
+          in: query
+          required: false
+          description: Case-insensitive search by exercise title.
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 255
+        - name: folderId
+          in: query
+          required: false
+          description: Filter exercises by folder id.
+          schema:
+            type: integer
+            minimum: 1
+        - name: authorId
+          in: query
+          required: false
+          description: Admin-only author filter. Coach may request only own id.
+          schema:
+            type: integer
+            minimum: 1
+        - name: limit
+          in: query
+          required: false
+          description: Maximum number of exercises to return.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: offset
+          in: query
+          required: false
+          description: Number of exercises to skip.
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+      responses:
+        "200":
+          description: Exercises returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExerciseListResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+    post:
+      tags: [Exercises]
+      summary: Create exercise
+      description: Admin and coach only. Exercise author is taken from Bearer token.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateExerciseRequest"
+            examples:
+              minimal:
+                value:
+                  title: Long pot practice
+              full:
+                value:
+                  title: Long pot practice
+                  description: Practice long pot with cue ball control.
+                  folderId: 1
+                  position:
+                    balls:
+                      - id: cue
+                        x: 120
+                        y: 240
+                        type: cue
+                    lines:
+                      - id: shot-line
+                        from:
+                          x: 120
+                          y: 240
+                        to:
+                          x: 320
+                          y: 180
+                        type: aim
+                    spin:
+                      x: 0
+                      y: 0
+                    power: 2.5
       responses:
         "201":
           description: Exercise created
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  ok: { type: boolean, example: true }
-                  id: { type: integer }
+                $ref: "#/components/schemas/ExerciseResponse"
+        "400":
+          description: Validation or foreign key error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
         "500":
-          description: Database error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-
-    get:
-      tags: [Exercises]
-      summary: Получение всех упражнений
-      responses:
-        "200":
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  ok: { type: boolean, example: true }
-                  exercises:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/Exercise"
-        "500":
-          description: Database error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+          $ref: "#/components/responses/InternalError"
 
   /exercises/{id}:
+    parameters:
+      - $ref: "#/components/parameters/ExerciseId"
+
     get:
       tags: [Exercises]
-      summary: Получить упражнение по id
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema: { type: integer }
+      summary: Get exercise by id
+      description: Admin can get any exercise. Coach can get only own exercise.
+      security:
+        - BearerAuth: []
       responses:
         "200":
-          description: Success
+          description: Exercise returned successfully
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  ok: { type: boolean, example: true }
-                  exercise:
-                    $ref: "#/components/schemas/Exercise"
+                $ref: "#/components/schemas/ExerciseResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
-          description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+          $ref: "#/components/responses/NotFoundError"
         "500":
-          description: Database error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+          $ref: "#/components/responses/InternalError"
 
     put:
       tags: [Exercises]
-      summary: Обновление упражнения
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema: { type: integer }
+      summary: Update exercise
+      description: Admin can update any exercise. Coach can update only own exercise.
+      security:
+        - BearerAuth: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Exercise"
+              $ref: "#/components/schemas/UpdateExerciseRequest"
+            example:
+              title: Updated long pot practice
+              description: Updated description for this exercise.
+              position:
+                power: 2.5
       responses:
         "200":
-          description: Success
+          description: Exercise updated
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  ok: { type: boolean, example: true }
-                  id: { type: integer }
+                $ref: "#/components/schemas/ExerciseResponse"
+        "400":
+          description: Validation or foreign key error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
-          description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
         "500":
-          description: Database error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+          $ref: "#/components/responses/InternalError"
 
     delete:
       tags: [Exercises]
-      summary: Удаление упражнения
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema: { type: integer }
+      summary: Soft delete exercise
+      description: Admin can delete any exercise. Coach can delete only own exercise.
+      security:
+        - BearerAuth: []
       responses:
-        "204":
-          description: Success (no content)
+        "200":
+          description: Exercise soft-deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExerciseResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
         "404":
-          description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+          $ref: "#/components/responses/NotFoundError"
         "500":
-          description: Database error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+          $ref: "#/components/responses/InternalError"
 
 components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    ExerciseId:
+      name: id
+      in: path
+      required: true
+      description: Exercise id.
+      schema:
+        type: integer
+        minimum: 1
+
+  responses:
+    ValidationError:
+      description: Request validation failed
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            ok: false
+            code: validation_error
+            message: Request validation failed
+
+    AuthError:
+      description: Authentication failed
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            ok: false
+            code: auth_required
+            message: Authentication is required
+
+    ForbiddenError:
+      description: Access denied
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            ok: false
+            code: forbidden
+            message: Access denied
+
+    NotFoundError:
+      description: Entity was not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            ok: false
+            code: not_found
+            message: Exercise not found
+
+    ConflictError:
+      description: Entity already exists
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            ok: false
+            code: unique_violation
+            message: Entity already exists
+
+    InternalError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            ok: false
+            code: internal_error
+            message: Internal server error
+
   schemas:
-    Exercise:
+    HealthResponse:
       type: object
-      required:
-        - title
+      required: [ok, status]
+      properties:
+        ok:
+          type: boolean
+          enum: [true]
+          example: true
+        status:
+          type: string
+          example: healthy
+
+    RegisterRequest:
+      type: object
+      required: [email, password, name, role]
       additionalProperties: false
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 3
+          maxLength: 255
+        password:
+          type: string
+          minLength: 3
+          maxLength: 128
+          format: password
+        name:
+          type: string
+          minLength: 2
+          maxLength: 255
+        role:
+          $ref: "#/components/schemas/UserRole"
+
+    LoginRequest:
+      type: object
+      required: [email, password]
+      additionalProperties: false
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 3
+          maxLength: 255
+        password:
+          type: string
+          minLength: 3
+          maxLength: 128
+          format: password
+
+    AuthResponse:
+      type: object
+      required: [ok, accessToken, user]
+      properties:
+        ok:
+          type: boolean
+          enum: [true]
+          example: true
+        accessToken:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        user:
+          $ref: "#/components/schemas/User"
+
+    UserResponse:
+      type: object
+      required: [ok, user]
+      properties:
+        ok:
+          type: boolean
+          enum: [true]
+          example: true
+        user:
+          $ref: "#/components/schemas/User"
+
+    User:
+      type: object
+      required: [id, email, name, role, created_at, updated_at]
       properties:
         id:
           type: integer
-          readOnly: true
-        title:
+          format: int64
+          example: 1
+        email:
           type: string
-        description:
+          format: email
+          example: coach@example.com
+        name:
           type: string
-        position:
-          type: object
-          additionalProperties: false
-          properties:
-            balls:
-              type: array
-              items:
-                type: object
-                required: [x, y, type]
-                additionalProperties: false
-                properties:
-                  x: { type: number }
-                  y: { type: number }
-                  type: { type: string }
-            lines:
-              type: array
-              items:
-                type: object
-                required: [from, to, type]
-                additionalProperties: false
-                properties:
-                  from:
-                    type: object
-                    required: [x, y]
-                    additionalProperties: false
-                    properties:
-                      x: { type: number }
-                      y: { type: number }
-                  to:
-                    type: object
-                    required: [x, y]
-                    additionalProperties: false
-                    properties:
-                      x: { type: number }
-                      y: { type: number }
-                  type: { type: string }
-            spin:
-              type: object
-              required: [x, y]
-              additionalProperties: false
-              properties:
-                x: { type: number }
-                y: { type: number }
-            power:
-              type: number
+          example: Coach Name
+        role:
+          $ref: "#/components/schemas/UserRole"
+        coach_id:
+          type: integer
+          format: int64
+          nullable: true
+          example: null
         created_at:
           type: string
           format: date-time
-          readOnly: true
         updated_at:
           type: string
           format: date-time
-          readOnly: true
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
 
-    Error:
+    UserRole:
+      type: string
+      enum: [admin, coach, athlete]
+
+    ExerciseListResponse:
       type: object
-      required:
-        - ok
-        - error
+      required: [ok, exercises, pagination]
+      properties:
+        ok:
+          type: boolean
+          enum: [true]
+          example: true
+        exercises:
+          type: array
+          items:
+            $ref: "#/components/schemas/Exercise"
+        pagination:
+          $ref: "#/components/schemas/Pagination"
+
+    ExerciseResponse:
+      type: object
+      required: [ok, exercise]
+      properties:
+        ok:
+          type: boolean
+          enum: [true]
+          example: true
+        exercise:
+          $ref: "#/components/schemas/Exercise"
+
+    Pagination:
+      type: object
+      required: [limit, offset]
+      properties:
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 100
+          example: 20
+        offset:
+          type: integer
+          minimum: 0
+          example: 0
+
+    CreateExerciseRequest:
+      type: object
+      required: [title]
+      additionalProperties: false
+      properties:
+        title:
+          type: string
+          minLength: 3
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
+          maxLength: 3000
+        position:
+          allOf:
+            - $ref: "#/components/schemas/Position"
+          nullable: true
+        folderId:
+          type: integer
+          nullable: true
+          minimum: 1
+
+    UpdateExerciseRequest:
+      type: object
+      minProperties: 1
+      additionalProperties: false
+      properties:
+        title:
+          type: string
+          minLength: 3
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
+          maxLength: 3000
+        position:
+          allOf:
+            - $ref: "#/components/schemas/Position"
+          nullable: true
+        folderId:
+          type: integer
+          nullable: true
+          minimum: 1
+
+    Exercise:
+      type: object
+      required: [id, title, created_at, updated_at]
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        title:
+          type: string
+          maxLength: 255
+          example: Long pot practice
+        description:
+          type: string
+          nullable: true
+          example: Practice long pot with cue ball control.
+        position:
+          allOf:
+            - $ref: "#/components/schemas/Position"
+          nullable: true
+        author_id:
+          type: integer
+          format: int64
+          nullable: true
+          example: 1
+        folder_id:
+          type: integer
+          format: int64
+          nullable: true
+          example: 1
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    Position:
+      type: object
+      additionalProperties: false
+      properties:
+        balls:
+          type: array
+          items:
+            $ref: "#/components/schemas/Ball"
+        lines:
+          type: array
+          items:
+            $ref: "#/components/schemas/Line"
+        spin:
+          $ref: "#/components/schemas/Point"
+        power:
+          type: number
+          example: 2.5
+
+    Ball:
+      type: object
+      required: [x, y, type]
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          minLength: 1
+          maxLength: 100
+          example: cue
+        x:
+          type: number
+          example: 120
+        y:
+          type: number
+          example: 240
+        type:
+          type: string
+          minLength: 1
+          maxLength: 50
+          example: cue
+
+    Line:
+      type: object
+      required: [from, to, type]
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          minLength: 1
+          maxLength: 100
+          example: shot-line
+        from:
+          $ref: "#/components/schemas/Point"
+        to:
+          $ref: "#/components/schemas/Point"
+        type:
+          type: string
+          minLength: 1
+          maxLength: 50
+          example: aim
+
+    Point:
+      type: object
+      required: [x, y]
+      additionalProperties: false
+      properties:
+        x:
+          type: number
+          example: 120
+        y:
+          type: number
+          example: 240
+
+    ErrorResponse:
+      type: object
+      required: [ok, code, message]
       properties:
         ok:
           type: boolean
           enum: [false]
           example: false
-        error:
+        code:
           type: string
-          example: "db error"
+          example: validation_error
+        message:
+          type: string
+          example: Request validation failed
+        details:
+          nullable: true
+          oneOf:
+            - type: string
+            - type: array
+              items:
+                type: object
+            - type: object
