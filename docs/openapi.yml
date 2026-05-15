@@ -15,6 +15,14 @@ tags:
     description: Authentication endpoints
   - name: Exercises
     description: Exercise CRUD endpoints
+  - name: Folders
+    description: Exercise folder CRUD endpoints
+  - name: Users
+    description: User list endpoints
+  - name: Groups
+    description: Coach group management endpoints
+  - name: Trainings
+    description: Individual and group training endpoints
 
 paths:
   /health:
@@ -125,6 +133,1043 @@ paths:
                 $ref: "#/components/schemas/UserResponse"
         "401":
           $ref: "#/components/responses/AuthError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /folders:
+    get:
+      tags: [Folders]
+      summary: Get exercise folders
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Folders returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FolderListResponse"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    post:
+      tags: [Folders]
+      summary: Create exercise folder
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateFolderRequest"
+            example:
+              title: Long pots
+      responses:
+        "201":
+          description: Folder created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FolderResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /folders/{id}:
+    parameters:
+      - $ref: "#/components/parameters/FolderId"
+    get:
+      tags: [Folders]
+      summary: Get exercise folder
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Folder returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FolderResponse"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    patch:
+      tags: [Folders]
+      summary: Update exercise folder
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateFolderRequest"
+            example:
+              title: Match drills
+      responses:
+        "200":
+          description: Folder updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FolderResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    delete:
+      tags: [Folders]
+      summary: Soft-delete exercise folder
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Folder soft-deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FolderResponse"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /users:
+    get:
+      tags: [Users]
+      summary: Get users
+      description: >
+        Requires authentication. Admin may list users by optional role. Coach
+        may list own athletes and, with role=coach, own user record. Athlete
+        cannot list users. groupId can be used only for athletes.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: role
+          in: query
+          required: false
+          description: Optional role filter.
+          schema:
+            $ref: "#/components/schemas/UserRole"
+        - name: groupId
+          in: query
+          required: false
+          description: Optional group filter. Can be combined only with role=athlete.
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        "200":
+          description: Users returned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserListResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /users/{id}:
+    get:
+      tags: [Users]
+      summary: Get user by id
+      description: >
+        Admin may read any active user. Coach may read own user record and own
+        athletes. Athlete may read only own user record.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/UserId"
+      responses:
+        "200":
+          description: User returned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserCamelResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+    patch:
+      tags: [Users]
+      summary: Update user
+      description: >
+        Admin may update users. Coach may update own athletes. Role and coach
+        ownership are not changed by this endpoint.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/UserId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUserRequest"
+            example:
+              name: Updated Athlete
+              email: updated.athlete@example.com
+              password: "123"
+      responses:
+        "200":
+          description: User updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserCamelResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+    delete:
+      tags: [Users]
+      summary: Soft-delete user
+      description: >
+        Admin may delete users except self. Coach may delete own athletes. For
+        athletes, active group memberships are also soft-deleted.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/UserId"
+      responses:
+        "200":
+          description: User soft-deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserCamelResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /groups:
+    get:
+      tags: [Groups]
+      summary: Get coach groups
+      description: Coach-only endpoint. Returns non-deleted groups of current coach.
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Groups returned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupListResponse"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+    post:
+      tags: [Groups]
+      summary: Create group
+      description: Coach-only endpoint. Group owner is taken from Bearer token.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateGroupRequest"
+            example:
+              name: Junior A
+              description: Morning junior group
+              athleteIds: [3, 4]
+      responses:
+        "201":
+          description: Group created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /groups/{id}:
+    parameters:
+      - $ref: "#/components/parameters/GroupId"
+
+    get:
+      tags: [Groups]
+      summary: Get group by id
+      description: Coach-only endpoint. Returns group with athletes.
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Group returned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+    patch:
+      tags: [Groups]
+      summary: Update group
+      description: Coach-only endpoint. Updates own non-deleted group.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateGroupRequest"
+            example:
+              name: Junior A Updated
+              description: Updated description
+      responses:
+        "200":
+          description: Group updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+    delete:
+      tags: [Groups]
+      summary: Soft delete group
+      description: Coach-only endpoint. Soft-deletes own group.
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Group soft-deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /groups/{id}/athletes:
+    post:
+      tags: [Groups]
+      summary: Add athlete to group
+      description: Coach-only endpoint. Athlete must belong to current coach.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/GroupId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddGroupAthleteRequest"
+            example:
+              athleteId: 3
+      responses:
+        "201":
+          description: Athlete added to group
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AthleteGroupResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /groups/{id}/athletes/{athleteId}:
+    delete:
+      tags: [Groups]
+      summary: Remove athlete from group
+      description: Coach-only endpoint. Soft-deletes athlete-group link.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/GroupId"
+        - $ref: "#/components/parameters/AthleteId"
+      responses:
+        "200":
+          description: Athlete removed from group
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AthleteGroupResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /trainings:
+    get:
+      tags: [Trainings]
+      summary: Get trainings
+      description: >
+        Coach receives own group trainings and own individual athlete trainings.
+        Athlete receives trainings assigned to them. Admin does not work with trainings.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: date
+          in: query
+          required: false
+          description: Calendar date filter by startsAt day, for example 2026-05-20.
+          schema:
+            type: string
+            example: "2026-05-20"
+        - name: dateFrom
+          in: query
+          required: false
+          description: Lower startsAt boundary.
+          schema:
+            type: string
+            example: "2026-05-20T00:00:00+07:00"
+        - name: dateTo
+          in: query
+          required: false
+          description: Upper startsAt boundary.
+          schema:
+            type: string
+            example: "2026-05-21T00:00:00+07:00"
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [scheduled, in_progress, completed, cancelled, missed]
+        - name: groupId
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+        - name: athleteId
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+      responses:
+        "200":
+          description: Trainings returned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TrainingListResponse"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+    post:
+      tags: [Trainings]
+      summary: Create individual or group training
+      description: >
+        Coach-only endpoint. Provide exactly one of athleteId or groupId.
+        For group trainings, pass either common items copied to every active
+        athlete in the group or athleteTrainings with individual item lists.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTrainingRequest"
+            examples:
+              individual:
+                value:
+                  athleteId: 3
+                  startsAt: "2026-05-20T10:00:00+07:00"
+                  endsAt: "2026-05-20T11:30:00+07:00"
+                  items:
+                    - exerciseId: 1
+                      orderIndex: 0
+                      targetAttempts: 10
+              group:
+                value:
+                  groupId: 1
+                  startsAt: "2026-05-20T10:00:00+07:00"
+                  endsAt: "2026-05-20T11:30:00+07:00"
+                  items:
+                    - exerciseId: 1
+                      orderIndex: 0
+                      targetAttempts: 10
+              groupWithIndividualItems:
+                value:
+                  groupId: 1
+                  startsAt: "2026-05-20T10:00:00+07:00"
+                  endsAt: "2026-05-20T11:30:00+07:00"
+                  athleteTrainings:
+                    - athleteId: 3
+                      items:
+                        - exerciseId: 1
+                          orderIndex: 0
+                          targetAttempts: 10
+                        - exerciseId: 2
+                          orderIndex: 1
+                          targetAttempts: 12
+                    - athleteId: 4
+                      items:
+                        - exerciseId: 1
+                          orderIndex: 0
+                          targetAttempts: 8
+      responses:
+        "201":
+          description: Training created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TrainingCreateResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /trainings/group/{id}:
+    get:
+      tags: [Trainings]
+      summary: Get group training by id
+      description: Coach-only endpoint. Returns group training with athlete trainings and items.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/TrainingId"
+      responses:
+        "200":
+          description: Group training returned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupTrainingResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+    patch:
+      tags: [Trainings]
+      summary: Update group training
+      description: Coach-only endpoint. Editable only while status is scheduled.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/TrainingId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateGroupTrainingRequest"
+            example:
+              startsAt: "2026-05-20T10:30:00+07:00"
+              endsAt: "2026-05-20T12:00:00+07:00"
+      responses:
+        "200":
+          description: Group training updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupTrainingResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+    delete:
+      tags: [Trainings]
+      summary: Soft delete group training
+      description: Coach-only endpoint. Soft-deletes group training, child athlete trainings and their items.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/TrainingId"
+      responses:
+        "200":
+          description: Group training soft-deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupTrainingResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /trainings/group/{id}/status:
+    patch:
+      tags: [Trainings]
+      summary: Update group training status
+      description: Coach-only endpoint. Allowed transitions are scheduled to in_progress, cancelled, missed; in_progress to completed.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/TrainingId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateTrainingStatusRequest"
+            example:
+              status: in_progress
+      responses:
+        "200":
+          description: Group training status updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupTrainingResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /trainings/athlete/{id}:
+    get:
+      tags: [Trainings]
+      summary: Get athlete training by id
+      description: Coach may get own athlete training. Athlete may get only their assigned training.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/TrainingId"
+      responses:
+        "200":
+          description: Athlete training returned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AthleteTrainingResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+    patch:
+      tags: [Trainings]
+      summary: Update athlete training
+      description: Coach-only endpoint. Editable only while status is scheduled. athleteId can be changed only for individual trainings.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/TrainingId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateAthleteTrainingRequest"
+            example:
+              startsAt: "2026-05-20T10:30:00+07:00"
+              endsAt: "2026-05-20T12:00:00+07:00"
+      responses:
+        "200":
+          description: Athlete training updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AthleteTrainingResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+    delete:
+      tags: [Trainings]
+      summary: Soft delete athlete training
+      description: Coach-only endpoint. Soft-deletes athlete training and its items.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/TrainingId"
+      responses:
+        "200":
+          description: Athlete training soft-deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AthleteTrainingResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /trainings/athlete/{id}/status:
+    patch:
+      tags: [Trainings]
+      summary: Update athlete training status
+      description: Coach may use standard transitions. Athlete may change only their own training from scheduled to in_progress and from in_progress to completed.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/TrainingId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateTrainingStatusRequest"
+            example:
+              status: completed
+      responses:
+        "200":
+          description: Athlete training status updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AthleteTrainingResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /trainings/athlete/{id}/items:
+    post:
+      tags: [Trainings]
+      summary: Add item to athlete training
+      description: Coach-only endpoint. Available only while athlete training is scheduled.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/TrainingId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTrainingItemRequest"
+            example:
+              exerciseId: 1
+              orderIndex: 0
+              targetAttempts: 10
+      responses:
+        "201":
+          description: Training item created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TrainingItemResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /trainings/athlete/{id}/items/{itemId}:
+    patch:
+      tags: [Trainings]
+      summary: Update training item
+      description: Coach-only endpoint. Allows orderIndex and targetAttempts changes while athlete training is scheduled.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/TrainingId"
+        - $ref: "#/components/parameters/TrainingItemId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateTrainingItemRequest"
+            example:
+              orderIndex: 1
+              targetAttempts: 12
+      responses:
+        "200":
+          description: Training item updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TrainingItemResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+    delete:
+      tags: [Trainings]
+      summary: Soft delete training item
+      description: Coach-only endpoint. Available only while athlete training is scheduled.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/TrainingId"
+        - $ref: "#/components/parameters/TrainingItemId"
+      responses:
+        "200":
+          description: Training item soft-deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TrainingItemResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /trainings/athlete/{id}/items/{itemId}/status:
+    patch:
+      tags: [Trainings]
+      summary: Update training item status
+      description: Coach or assigned athlete can update item status while athlete training is in_progress.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/TrainingId"
+        - $ref: "#/components/parameters/TrainingItemId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateTrainingItemStatusRequest"
+            example:
+              status: in_progress
+      responses:
+        "200":
+          description: Training item status updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TrainingItemResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /trainings/athlete/{id}/items/{itemId}/result:
+    patch:
+      tags: [Trainings]
+      summary: Update training item result
+      description: Coach or assigned athlete can update result while athlete training and item are both in_progress.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/TrainingId"
+        - $ref: "#/components/parameters/TrainingItemId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateTrainingItemResultRequest"
+            example:
+              resultAttempts: 10
+              resultSuccesses: 6
+      responses:
+        "200":
+          description: Training item result updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TrainingItemResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
         "500":
           $ref: "#/components/responses/InternalError"
 
@@ -365,6 +1410,60 @@ components:
         type: integer
         minimum: 1
 
+    FolderId:
+      name: id
+      in: path
+      required: true
+      description: Folder id.
+      schema:
+        type: integer
+        minimum: 1
+
+    GroupId:
+      name: id
+      in: path
+      required: true
+      description: Group id.
+      schema:
+        type: integer
+        minimum: 1
+
+    UserId:
+      name: id
+      in: path
+      required: true
+      description: User id.
+      schema:
+        type: integer
+        minimum: 1
+
+    AthleteId:
+      name: athleteId
+      in: path
+      required: true
+      description: Athlete user id.
+      schema:
+        type: integer
+        minimum: 1
+
+    TrainingId:
+      name: id
+      in: path
+      required: true
+      description: Training id.
+      schema:
+        type: integer
+        minimum: 1
+
+    TrainingItemId:
+      name: itemId
+      in: path
+      required: true
+      description: Training item id.
+      schema:
+        type: integer
+        minimum: 1
+
   responses:
     ValidationError:
       description: Request validation failed
@@ -495,7 +1594,7 @@ components:
           type: string
           example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
         user:
-          $ref: "#/components/schemas/User"
+          $ref: "#/components/schemas/UserCamel"
 
     UserResponse:
       type: object
@@ -506,44 +1605,700 @@ components:
           enum: [true]
           example: true
         user:
-          $ref: "#/components/schemas/User"
+          $ref: "#/components/schemas/UserCamel"
 
-    User:
+    UserListResponse:
       type: object
-      required: [id, email, name, role, created_at, updated_at]
+      required: [ok, users]
       properties:
-        id:
-          type: integer
-          format: int64
-          example: 1
+        ok:
+          type: boolean
+          enum: [true]
+          example: true
+        users:
+          type: array
+          items:
+            $ref: "#/components/schemas/UserCamel"
+
+    UserCamelResponse:
+      type: object
+      required: [ok, user]
+      properties:
+        ok:
+          type: boolean
+          enum: [true]
+          example: true
+        user:
+          $ref: "#/components/schemas/UserCamel"
+
+    UpdateUserRequest:
+      type: object
+      minProperties: 1
+      additionalProperties: false
+      properties:
         email:
           type: string
           format: email
-          example: coach@example.com
+          example: athlete.updated@example.com
         name:
           type: string
-          example: Coach Name
-        role:
-          $ref: "#/components/schemas/UserRole"
-        coach_id:
-          type: integer
-          format: int64
-          nullable: true
-          example: null
-        created_at:
+          minLength: 2
+          maxLength: 255
+          example: Updated Athlete
+        password:
           type: string
-          format: date-time
-        updated_at:
-          type: string
-          format: date-time
-        deleted_at:
-          type: string
-          format: date-time
-          nullable: true
+          minLength: 3
+          maxLength: 128
+          example: "123"
 
     UserRole:
       type: string
       enum: [admin, coach, athlete]
+
+    FolderListResponse:
+      type: object
+      required: [ok, folders]
+      properties:
+        ok:
+          type: boolean
+          enum: [true]
+          example: true
+        folders:
+          type: array
+          items:
+            $ref: "#/components/schemas/Folder"
+
+    FolderResponse:
+      type: object
+      required: [ok, folder]
+      properties:
+        ok:
+          type: boolean
+          enum: [true]
+          example: true
+        folder:
+          $ref: "#/components/schemas/Folder"
+
+    CreateFolderRequest:
+      type: object
+      required: [title]
+      additionalProperties: false
+      properties:
+        title:
+          type: string
+          minLength: 2
+          maxLength: 255
+          example: Long pots
+
+    UpdateFolderRequest:
+      type: object
+      minProperties: 1
+      additionalProperties: false
+      properties:
+        title:
+          type: string
+          minLength: 2
+          maxLength: 255
+          example: Match drills
+
+    Folder:
+      type: object
+      required: [id, title, authorId, createdAt, updatedAt]
+      properties:
+        id:
+          type: string
+          example: "1"
+        title:
+          type: string
+          maxLength: 255
+          example: Long pots
+        authorId:
+          type: string
+          nullable: true
+          example: "2"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    UserCamel:
+      type: object
+      required: [id, email, name, role, createdAt, updatedAt]
+      properties:
+        id:
+          type: string
+          example: 3
+        email:
+          type: string
+          format: email
+          example: athlete@example.com
+        name:
+          type: string
+          example: Athlete User
+        role:
+          $ref: "#/components/schemas/UserRole"
+        coachId:
+          type: string
+          nullable: true
+          example: 2
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    GroupListResponse:
+      type: object
+      required: [ok, groups]
+      properties:
+        ok:
+          type: boolean
+          enum: [true]
+          example: true
+        groups:
+          type: array
+          items:
+            $ref: "#/components/schemas/Group"
+
+    GroupResponse:
+      type: object
+      required: [ok, group]
+      properties:
+        ok:
+          type: boolean
+          enum: [true]
+          example: true
+        group:
+          $ref: "#/components/schemas/Group"
+
+    AthleteGroupResponse:
+      type: object
+      required: [ok, athleteGroup]
+      properties:
+        ok:
+          type: boolean
+          enum: [true]
+          example: true
+        athleteGroup:
+          $ref: "#/components/schemas/AthleteGroup"
+
+    CreateGroupRequest:
+      type: object
+      required: [name]
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+          minLength: 2
+          maxLength: 255
+          example: Junior A
+        description:
+          type: string
+          nullable: true
+          maxLength: 3000
+          example: Morning junior group
+        athleteIds:
+          type: array
+          uniqueItems: true
+          default: []
+          items:
+            type: integer
+            minimum: 1
+          example: [3, 4]
+
+    UpdateGroupRequest:
+      type: object
+      minProperties: 1
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+          minLength: 2
+          maxLength: 255
+          example: Junior A Updated
+        description:
+          type: string
+          nullable: true
+          maxLength: 3000
+          example: Updated description
+
+    AddGroupAthleteRequest:
+      type: object
+      required: [athleteId]
+      additionalProperties: false
+      properties:
+        athleteId:
+          type: integer
+          minimum: 1
+          example: 3
+
+    Group:
+      type: object
+      required: [id, name, coachId, createdAt, updatedAt]
+      properties:
+        id:
+          type: string
+          example: 1
+        name:
+          type: string
+          maxLength: 255
+          example: Junior A
+        coachId:
+          type: string
+          example: 2
+        description:
+          type: string
+          nullable: true
+          example: Morning junior group
+        athletesCount:
+          type: integer
+          nullable: true
+          example: 3
+        athletes:
+          type: array
+          items:
+            $ref: "#/components/schemas/UserCamel"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    AthleteGroup:
+      type: object
+      required: [id, athleteId, groupId, createdAt]
+      properties:
+        id:
+          type: string
+          example: 1
+        athleteId:
+          type: string
+          example: 3
+        groupId:
+          type: string
+          example: 1
+        createdAt:
+          type: string
+          format: date-time
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    CreateTrainingRequest:
+      type: object
+      required: [startsAt, endsAt]
+      additionalProperties: false
+      properties:
+        groupId:
+          type: integer
+          minimum: 1
+          description: Group target. Cannot be used together with athleteId.
+          example: 1
+        athleteId:
+          type: integer
+          minimum: 1
+          description: Individual athlete target. Cannot be used together with groupId.
+          example: 3
+        startsAt:
+          type: string
+          format: date-time
+          example: "2026-05-20T10:00:00+07:00"
+        endsAt:
+          type: string
+          format: date-time
+          example: "2026-05-20T11:30:00+07:00"
+        items:
+          type: array
+          default: []
+          description: Common item list. For group training it is copied to every athlete.
+          items:
+            $ref: "#/components/schemas/CreateTrainingItemRequest"
+        athleteTrainings:
+          type: array
+          description: >
+            Group-only item list by athlete. Cannot be used together with a
+            non-empty common items array.
+          items:
+            $ref: "#/components/schemas/CreateAthleteTrainingItemsRequest"
+
+    CreateAthleteTrainingItemsRequest:
+      type: object
+      required: [athleteId]
+      additionalProperties: false
+      properties:
+        athleteId:
+          type: integer
+          minimum: 1
+          example: 3
+        items:
+          type: array
+          default: []
+          items:
+            $ref: "#/components/schemas/CreateTrainingItemRequest"
+
+    CreateTrainingItemRequest:
+      type: object
+      required: [exerciseId]
+      additionalProperties: false
+      properties:
+        exerciseId:
+          type: integer
+          minimum: 1
+          example: 1
+        orderIndex:
+          type: integer
+          minimum: 0
+          example: 0
+        targetAttempts:
+          type: integer
+          minimum: 1
+          example: 10
+
+    UpdateGroupTrainingRequest:
+      type: object
+      minProperties: 1
+      additionalProperties: false
+      properties:
+        startsAt:
+          type: string
+          format: date-time
+          example: "2026-05-20T10:30:00+07:00"
+        endsAt:
+          type: string
+          format: date-time
+          example: "2026-05-20T12:00:00+07:00"
+
+    UpdateAthleteTrainingRequest:
+      type: object
+      minProperties: 1
+      additionalProperties: false
+      properties:
+        athleteId:
+          type: integer
+          minimum: 1
+          example: 3
+        startsAt:
+          type: string
+          format: date-time
+          example: "2026-05-20T10:30:00+07:00"
+        endsAt:
+          type: string
+          format: date-time
+          example: "2026-05-20T12:00:00+07:00"
+
+    UpdateTrainingStatusRequest:
+      type: object
+      required: [status]
+      additionalProperties: false
+      properties:
+        status:
+          type: string
+          enum: [scheduled, in_progress, completed, cancelled, missed]
+          example: in_progress
+
+    UpdateTrainingItemRequest:
+      type: object
+      minProperties: 1
+      additionalProperties: false
+      properties:
+        orderIndex:
+          type: integer
+          minimum: 0
+          example: 1
+        targetAttempts:
+          type: integer
+          nullable: true
+          minimum: 1
+          example: 12
+
+    UpdateTrainingItemStatusRequest:
+      type: object
+      required: [status]
+      additionalProperties: false
+      properties:
+        status:
+          type: string
+          enum: [not_started, in_progress, completed, skipped]
+          example: in_progress
+
+    UpdateTrainingItemResultRequest:
+      type: object
+      required: [resultAttempts, resultSuccesses]
+      additionalProperties: false
+      properties:
+        resultAttempts:
+          type: integer
+          minimum: 0
+          example: 10
+        resultSuccesses:
+          type: integer
+          minimum: 0
+          example: 6
+
+    TrainingCreateResponse:
+      type: object
+      required: [ok, training]
+      properties:
+        ok:
+          type: boolean
+          enum: [true]
+          example: true
+        training:
+          $ref: "#/components/schemas/TrainingEnvelope"
+
+    TrainingListResponse:
+      type: object
+      required: [ok, trainings, pagination]
+      properties:
+        ok:
+          type: boolean
+          enum: [true]
+          example: true
+        trainings:
+          type: array
+          items:
+            $ref: "#/components/schemas/TrainingEnvelope"
+        pagination:
+          $ref: "#/components/schemas/Pagination"
+
+    GroupTrainingResponse:
+      type: object
+      required: [ok, groupTraining]
+      properties:
+        ok:
+          type: boolean
+          enum: [true]
+          example: true
+        groupTraining:
+          $ref: "#/components/schemas/GroupTraining"
+
+    AthleteTrainingResponse:
+      type: object
+      required: [ok, athleteTraining]
+      properties:
+        ok:
+          type: boolean
+          enum: [true]
+          example: true
+        athleteTraining:
+          $ref: "#/components/schemas/AthleteTraining"
+
+    TrainingItemResponse:
+      type: object
+      required: [ok, item]
+      properties:
+        ok:
+          type: boolean
+          enum: [true]
+          example: true
+        item:
+          $ref: "#/components/schemas/TrainingItem"
+
+    TrainingEnvelope:
+      type: object
+      required: [type]
+      properties:
+        type:
+          type: string
+          enum: [group, athlete]
+        groupTraining:
+          $ref: "#/components/schemas/GroupTraining"
+        athleteTraining:
+          $ref: "#/components/schemas/AthleteTraining"
+
+    GroupTraining:
+      type: object
+      required:
+        [id, coachId, groupId, startsAt, endsAt, status, createdAt, updatedAt]
+      properties:
+        id:
+          type: string
+          example: 1
+        coachId:
+          type: string
+          example: 2
+        groupId:
+          type: string
+          example: 1
+        startsAt:
+          type: string
+          format: date-time
+        endsAt:
+          type: string
+          format: date-time
+        status:
+          type: string
+          example: scheduled
+        athleteTrainingsCount:
+          type: integer
+          nullable: true
+          example: 3
+        athleteTrainings:
+          type: array
+          items:
+            $ref: "#/components/schemas/AthleteTraining"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    AthleteTraining:
+      type: object
+      required:
+        [id, coachId, athleteId, startsAt, endsAt, status, createdAt, updatedAt]
+      properties:
+        id:
+          type: string
+          example: 1
+        groupTrainingId:
+          type: string
+          nullable: true
+          example: null
+        coachId:
+          type: string
+          example: 2
+        athleteId:
+          type: string
+          example: 3
+        athlete:
+          $ref: "#/components/schemas/UserCamel"
+        startsAt:
+          type: string
+          format: date-time
+        endsAt:
+          type: string
+          format: date-time
+        status:
+          type: string
+          example: scheduled
+        itemsCount:
+          type: integer
+          nullable: true
+          example: 2
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/TrainingItem"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    TrainingItem:
+      type: object
+      required:
+        [
+          id,
+          athleteTrainingId,
+          exerciseId,
+          orderIndex,
+          status,
+          createdAt,
+          updatedAt,
+        ]
+      properties:
+        id:
+          type: string
+          example: 1
+        athleteTrainingId:
+          type: string
+          example: 1
+        exerciseId:
+          type: string
+          example: 1
+        orderIndex:
+          type: integer
+          example: 0
+        targetAttempts:
+          type: integer
+          nullable: true
+          example: 10
+        resultAttempts:
+          type: integer
+          nullable: true
+          example: null
+        resultSuccesses:
+          type: integer
+          nullable: true
+          example: null
+        status:
+          type: string
+          example: not_started
+        exercise:
+          $ref: "#/components/schemas/ExerciseCamel"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    ExerciseCamel:
+      type: object
+      required: [id, title, createdAt, updatedAt]
+      properties:
+        id:
+          type: string
+          example: 1
+        title:
+          type: string
+          example: Long pot practice
+        description:
+          type: string
+          nullable: true
+        position:
+          allOf:
+            - $ref: "#/components/schemas/Position"
+          nullable: true
+        authorId:
+          type: string
+          nullable: true
+        folderId:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
 
     ExerciseListResponse:
       type: object
@@ -556,7 +2311,7 @@ components:
         exercises:
           type: array
           items:
-            $ref: "#/components/schemas/Exercise"
+            $ref: "#/components/schemas/ExerciseCamel"
         pagination:
           $ref: "#/components/schemas/Pagination"
 
@@ -569,11 +2324,11 @@ components:
           enum: [true]
           example: true
         exercise:
-          $ref: "#/components/schemas/Exercise"
+          $ref: "#/components/schemas/ExerciseCamel"
 
     Pagination:
       type: object
-      required: [limit, offset]
+      required: [limit, offset, total]
       properties:
         limit:
           type: integer
@@ -584,6 +2339,10 @@ components:
           type: integer
           minimum: 0
           example: 0
+        total:
+          type: integer
+          nullable: true
+          example: 42
 
     CreateExerciseRequest:
       type: object
@@ -628,47 +2387,6 @@ components:
           type: integer
           nullable: true
           minimum: 1
-
-    Exercise:
-      type: object
-      required: [id, title, created_at, updated_at]
-      properties:
-        id:
-          type: integer
-          format: int64
-          example: 1
-        title:
-          type: string
-          maxLength: 255
-          example: Long pot practice
-        description:
-          type: string
-          nullable: true
-          example: Practice long pot with cue ball control.
-        position:
-          allOf:
-            - $ref: "#/components/schemas/Position"
-          nullable: true
-        author_id:
-          type: integer
-          format: int64
-          nullable: true
-          example: 1
-        folder_id:
-          type: integer
-          format: int64
-          nullable: true
-          example: 1
-        created_at:
-          type: string
-          format: date-time
-        updated_at:
-          type: string
-          format: date-time
-        deleted_at:
-          type: string
-          format: date-time
-          nullable: true
 
     Position:
       type: object
