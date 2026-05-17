@@ -1,0 +1,1666 @@
+
+<!doctype html>
+<html lang="ru" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Rumuantsev Arseniy">
+      
+      
+        <link rel="canonical" href="https://rumuantsev.github.io/billiard-diary-documentation/%D0%A2%D1%80%D0%B5%D0%B1%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F/non-functional-requirement/">
+      
+      
+        <link rel="prev" href="../functional-requirement/">
+      
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.16">
+    
+    
+      
+        <title>Нефункциональные требования - Документация бильярдного дневника</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="light" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#_1" class="md-skip">
+          Перейти к содержанию
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Верхний колонтитул">
+    <a href="../.." title="Документация бильярдного дневника" class="md-header__button md-logo" aria-label="Документация бильярдного дневника" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Документация бильярдного дневника
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Нефункциональные требования
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="light" data-md-color-accent="indigo"  aria-label="Перейти на тёмную сторону"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Перейти на тёмную сторону" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Перейти на светлую сторону"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Перейти на светлую сторону" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Rumuantsev/billiard-diary-documentation" title="Перейти к репозиторию" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Rumuantsev/billiard-diary-documentation
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Навигация" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Документация бильярдного дневника" class="md-nav__button md-logo" aria-label="Документация бильярдного дневника" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Документация бильярдного дневника
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Rumuantsev/billiard-diary-documentation" title="Перейти к репозиторию" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Rumuantsev/billiard-diary-documentation
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Цифровая платформа «Электронный дневник бильярдиста»
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../OpenAPI/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Документация API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%D0%9A%D0%BB%D0%B0%D1%81%D1%81%D1%8B/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Классы
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%D0%9C%D0%BE%D0%B4%D0%B5%D0%BB%D1%8C%20%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D1%85/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Модель данных
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Инструкции
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Инструкции
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%D0%98%D0%BD%D1%81%D1%82%D1%80%D1%83%D0%BA%D1%86%D0%B8%D0%B8/%D0%9E%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%B8%D0%B5%20API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Billiard Diary Backend API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%D0%98%D0%BD%D1%81%D1%82%D1%80%D1%83%D0%BA%D1%86%D0%B8%D0%B8/%D0%9E%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%B8%D0%B5%20%D0%BF%D1%80%D0%BE%D1%82%D0%BE%D1%82%D0%B8%D0%BF%D0%B0%20%D1%81%20%D1%82%D0%BE%D1%87%D0%BA%D0%B8%20%D0%B7%D1%80%D0%B5%D0%BD%D0%B8%D1%8F%20API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    API для coach-прототипа withGroups
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Требования
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Требования
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Глоссарий
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1user-requirement/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Пользовательские требования
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../functional-requirement/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Функциональные требования
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Нефункциональные требования
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Нефункциональные требования
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Доступность и надежность
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Доступность и надежность">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.1. Доступность системы
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.2. Сохранность данных
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Производительность
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Производительность">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.1. Расчетная нагрузка
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.2. Время ответа
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.3. Списки и пагинация
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Безопасность
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Безопасность">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.1. Авторизация
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2. Пароли
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.3. Разграничение данных
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.4. Валидация данных
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Персональные данные
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Персональные данные">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1. Состав данных
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.2. Минимизация и удаление
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.3. Журналирование действий
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Пользовательский интерфейс
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Пользовательский интерфейс">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.1. Адаптивность
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.2. Сообщения и подтверждения
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Совместимость
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Совместимость">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.1. Браузеры
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.2. Часовые пояса
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Целостность данных
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Целостность данных">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.1. Временные ограничения
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.2. Отображение удаленных данных
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.3. Связность данных
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. Масштабируемость и изоляция организаций
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Масштабируемость и изоляция организаций">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.1. Масштабируемость
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.2. Организации
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      9. Документация API
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10" class="md-nav__link">
+    <span class="md-ellipsis">
+      10. Логирование и мониторинг
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Логирование и мониторинг">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101" class="md-nav__link">
+    <span class="md-ellipsis">
+      10.1. Логирование ошибок
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#102" class="md-nav__link">
+    <span class="md-ellipsis">
+      10.2. Логирование пользовательских действий
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#103" class="md-nav__link">
+    <span class="md-ellipsis">
+      10.3. Мониторинг
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      11. Резервное копирование и восстановление
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. Резервное копирование и восстановление">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#111" class="md-nav__link">
+    <span class="md-ellipsis">
+      11.1. Резервное копирование
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#112" class="md-nav__link">
+    <span class="md-ellipsis">
+      11.2. Восстановление
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      12. Локализация
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Доступность и надежность
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Доступность и надежность">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.1. Доступность системы
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.2. Сохранность данных
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Производительность
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Производительность">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.1. Расчетная нагрузка
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.2. Время ответа
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.3. Списки и пагинация
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Безопасность
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Безопасность">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.1. Авторизация
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2. Пароли
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.3. Разграничение данных
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.4. Валидация данных
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Персональные данные
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Персональные данные">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1. Состав данных
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.2. Минимизация и удаление
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.3. Журналирование действий
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Пользовательский интерфейс
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Пользовательский интерфейс">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.1. Адаптивность
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.2. Сообщения и подтверждения
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Совместимость
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Совместимость">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.1. Браузеры
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.2. Часовые пояса
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Целостность данных
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Целостность данных">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.1. Временные ограничения
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.2. Отображение удаленных данных
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.3. Связность данных
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. Масштабируемость и изоляция организаций
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Масштабируемость и изоляция организаций">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.1. Масштабируемость
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.2. Организации
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      9. Документация API
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10" class="md-nav__link">
+    <span class="md-ellipsis">
+      10. Логирование и мониторинг
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Логирование и мониторинг">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101" class="md-nav__link">
+    <span class="md-ellipsis">
+      10.1. Логирование ошибок
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#102" class="md-nav__link">
+    <span class="md-ellipsis">
+      10.2. Логирование пользовательских действий
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#103" class="md-nav__link">
+    <span class="md-ellipsis">
+      10.3. Мониторинг
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      11. Резервное копирование и восстановление
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. Резервное копирование и восстановление">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#111" class="md-nav__link">
+    <span class="md-ellipsis">
+      11.1. Резервное копирование
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#112" class="md-nav__link">
+    <span class="md-ellipsis">
+      11.2. Восстановление
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      12. Локализация
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="_1">Нефункциональные требования</h1>
+<p>Нефункциональные требования описывают проверяемые характеристики качества системы: доступность, производительность, безопасность, защиту данных, совместимость, эксплуатацию и восстановление после сбоев.</p>
+<h2 id="1">1. Доступность и надежность</h2>
+<h3 id="11">1.1. Доступность системы</h3>
+<ul>
+<li><strong>НФТ-1.1</strong> — Система должна быть доступна пользователям круглосуточно.</li>
+<li><strong>НФТ-1.2</strong> — Доступность системы должна составлять не менее 95% календарного времени в год.</li>
+<li><strong>НФТ-1.3</strong> — При недоступности backend пользовательский интерфейс должен отображать сообщение об ошибке на русском языке.</li>
+<li><strong>НФТ-1.4</strong> — Сообщение о недоступности backend должно содержать указание, что действие не выполнено и его необходимо повторить позже.</li>
+</ul>
+<h3 id="12">1.2. Сохранность данных</h3>
+<ul>
+<li><strong>НФТ-1.5</strong> — Данные, для которых система вернула успешный ответ о сохранении, не должны теряться при последующих сбоях приложения.</li>
+<li><strong>НФТ-1.6</strong> — После успешного сохранения результата тренировки повторное открытие тренировки должно отображать сохраненные значения попыток и успешных попыток.</li>
+<li><strong>НФТ-1.7</strong> — После успешного создания тренировки повторное открытие календаря или списка тренировок должно отображать созданную тренировку.</li>
+</ul>
+<h2 id="2">2. Производительность</h2>
+<h3 id="21">2.1. Расчетная нагрузка</h3>
+<ul>
+<li><strong>НФТ-2.1</strong> — Система должна поддерживать работу не менее 50 тренеров.</li>
+<li><strong>НФТ-2.2</strong> — Система должна поддерживать хранение и обработку данных не менее 100 групп.</li>
+<li><strong>НФТ-2.3</strong> — Система должна поддерживать создание и просмотр не менее 300 групповых тренировок в неделю.</li>
+<li><strong>НФТ-2.4</strong> — Система должна сохранять работоспособность при одновременной работе пользователей в рамках расчетной нагрузки.</li>
+</ul>
+<h3 id="22">2.2. Время ответа</h3>
+<ul>
+<li><strong>НФТ-2.5</strong> — Не менее 90% API-запросов должны выполняться быстрее чем за 2 секунды при расчетной нагрузке.</li>
+<li><strong>НФТ-2.6</strong> — Запросы получения календаря тренировок должны выполняться не дольше 3 секунд при расчетной нагрузке.</li>
+<li><strong>НФТ-2.7</strong> — Запросы получения аналитических данных должны выполняться не дольше 5 секунд при расчетной нагрузке.</li>
+<li><strong>НФТ-2.8</strong> — Время ответа должно измеряться от момента получения backend запроса до момента отправки backend ответа.</li>
+</ul>
+<h3 id="23">2.3. Списки и пагинация</h3>
+<ul>
+<li><strong>НФТ-2.9</strong> — Списки пользователей должны поддерживать постраничную загрузку или ограничение размера возвращаемого набора данных.</li>
+<li><strong>НФТ-2.10</strong> — Списки упражнений должны поддерживать постраничную загрузку или ограничение размера возвращаемого набора данных.</li>
+<li><strong>НФТ-2.11</strong> — Списки тренировок должны поддерживать постраничную загрузку или ограничение размера возвращаемого набора данных.</li>
+<li><strong>НФТ-2.12</strong> — Для списков тренировок система должна поддерживать фильтрацию по периоду.</li>
+</ul>
+<h2 id="3">3. Безопасность</h2>
+<h3 id="31">3.1. Авторизация</h3>
+<ul>
+<li><strong>НФТ-3.1</strong> — Все защищенные действия должны требовать авторизации пользователя.</li>
+<li><strong>НФТ-3.2</strong> — Авторизация API должна выполняться с использованием JWT.</li>
+<li><strong>НФТ-3.3</strong> — API-запрос без действительного JWT к защищенному ресурсу должен завершаться ошибкой доступа.</li>
+<li><strong>НФТ-3.4</strong> — Время действия JWT должно быть ограничено настройкой системы.</li>
+</ul>
+<h3 id="32">3.2. Пароли</h3>
+<ul>
+<li><strong>НФТ-3.5</strong> — Пароли пользователей должны храниться только в виде криптографического хеша.</li>
+<li><strong>НФТ-3.6</strong> — Система не должна возвращать пароль или хеш пароля в ответах API.</li>
+<li><strong>НФТ-3.7</strong> — При входе пользователя система должна сравнивать введенный пароль с сохраненным хешем.</li>
+</ul>
+<h3 id="33">3.3. Разграничение данных</h3>
+<ul>
+<li><strong>НФТ-3.8</strong> — Тренер не должен получать доступ к спортсменам другого тренера.</li>
+<li><strong>НФТ-3.9</strong> — Тренер не должен получать доступ к группам другого тренера.</li>
+<li><strong>НФТ-3.10</strong> — Тренер не должен получать доступ к упражнениям другого тренера, кроме случаев использования публичной библиотеки упражнений.</li>
+<li><strong>НФТ-3.11</strong> — Тренер не должен изменять тренировки, созданные другим тренером.</li>
+<li><strong>НФТ-3.12</strong> — Спортсмен не должен получать доступ к тренировкам и заданиям других спортсменов.</li>
+<li><strong>НФТ-3.13</strong> — Спортсмен не должен получать прямой доступ к управлению упражнениями, группами и списками пользователей.</li>
+<li><strong>НФТ-3.14</strong> — Администратор должен иметь доступ только к административным функциям, предусмотренным его ролью.</li>
+</ul>
+<h3 id="34">3.4. Валидация данных</h3>
+<ul>
+<li><strong>НФТ-3.15</strong> — Все входные данные API должны проверяться до выполнения бизнес-операции.</li>
+<li><strong>НФТ-3.16</strong> — API-запрос с отсутствующим обязательным полем должен завершаться ошибкой валидации.</li>
+<li><strong>НФТ-3.17</strong> — API-запрос с полем неподдерживаемого типа должен завершаться ошибкой валидации.</li>
+<li><strong>НФТ-3.18</strong> — API-запрос с недопустимым значением статуса должен завершаться ошибкой валидации или ошибкой бизнес-правила.</li>
+</ul>
+<h2 id="4">4. Персональные данные</h2>
+<h3 id="41">4.1. Состав данных</h3>
+<ul>
+<li><strong>НФТ-4.1</strong> — Система должна хранить персональные данные пользователей, необходимые для работы сервиса: имя и email.</li>
+<li><strong>НФТ-4.2</strong> — Система должна хранить данные спортсмена только в объеме, необходимом для ведения тренировочного процесса.</li>
+<li><strong>НФТ-4.3</strong> — Дополнительные данные спортсмена должны использоваться только для целей сопровождения тренировочного процесса.</li>
+</ul>
+<h3 id="42">4.2. Минимизация и удаление</h3>
+<ul>
+<li><strong>НФТ-4.4</strong> — Система не должна требовать от пользователя персональные данные, не используемые в пользовательских сценариях системы.</li>
+<li><strong>НФТ-4.5</strong> — Удаление пользователей, групп, упражнений и тренировок должно выполняться как мягкое удаление.</li>
+<li><strong>НФТ-4.6</strong> — Мягко удаленные сущности не должны отображаться в обычных рабочих списках.</li>
+<li><strong>НФТ-4.7</strong> — Система должна сохранять связи тренировки с упражнением после мягкого удаления упражнения.</li>
+</ul>
+<h3 id="43">4.3. Журналирование действий</h3>
+<ul>
+<li><strong>НФТ-4.8</strong> — Система должна фиксировать в логах действия администратора по созданию и изменению пользователей.</li>
+<li><strong>НФТ-4.9</strong> — Система должна фиксировать в логах действия тренера по созданию, изменению и мягкому удалению тренировок.</li>
+<li><strong>НФТ-4.10</strong> — Система должна фиксировать в логах действия тренера по мягкому удалению спортсмена.</li>
+<li><strong>НФТ-4.11</strong> — Система должна фиксировать в логах действия пользователя по изменению результата задания тренировки.</li>
+</ul>
+<h2 id="5">5. Пользовательский интерфейс</h2>
+<h3 id="51">5.1. Адаптивность</h3>
+<ul>
+<li><strong>НФТ-5.1</strong> — Пользовательский интерфейс должен поддерживать ширину экрана от 360 px.</li>
+<li><strong>НФТ-5.2</strong> — Пользовательский интерфейс должен поддерживать desktop-экраны шириной 1280 px и более.</li>
+<li><strong>НФТ-5.3</strong> — На экранах шириной от 360 px до 767 px основные сценарии спортсмена должны быть доступны без горизонтальной прокрутки страницы.</li>
+<li><strong>НФТ-5.4</strong> — На экранах шириной от 768 px до 1279 px основные сценарии тренера должны быть доступны без горизонтальной прокрутки страницы.</li>
+<li><strong>НФТ-5.5</strong> — На экранах шириной 1280 px и более календарь, списки и формы тренера должны использовать доступную ширину экрана без скрытия основных элементов управления.</li>
+</ul>
+<h3 id="52">5.2. Сообщения и подтверждения</h3>
+<ul>
+<li><strong>НФТ-5.6</strong> — Ошибки пользовательского интерфейса должны отображаться на русском языке.</li>
+<li><strong>НФТ-5.7</strong> — Сообщение об ошибке должно указывать действие, которое не удалось выполнить.</li>
+<li><strong>НФТ-5.8</strong> — Перед мягким удалением спортсмена система должна запросить подтверждение.</li>
+<li><strong>НФТ-5.9</strong> — Перед мягким удалением группы система должна запросить подтверждение.</li>
+<li><strong>НФТ-5.10</strong> — Перед мягким удалением упражнения система должна запросить подтверждение.</li>
+<li><strong>НФТ-5.11</strong> — Перед отменой тренировки система должна запросить подтверждение.</li>
+</ul>
+<h2 id="6">6. Совместимость</h2>
+<h3 id="61">6.1. Браузеры</h3>
+<ul>
+<li><strong>НФТ-6.1</strong> — Пользовательский интерфейс должен поддерживать актуальные версии Google Chrome.</li>
+<li><strong>НФТ-6.2</strong> — Пользовательский интерфейс должен поддерживать актуальные версии Microsoft Edge.</li>
+<li><strong>НФТ-6.3</strong> — Пользовательский интерфейс должен поддерживать актуальные версии Safari.</li>
+<li><strong>НФТ-6.4</strong> — Пользовательский интерфейс должен поддерживать актуальные версии Mozilla Firefox.</li>
+<li><strong>НФТ-6.5</strong> — Поддержка браузеров Internet Explorer не требуется.</li>
+</ul>
+<h3 id="62">6.2. Часовые пояса</h3>
+<ul>
+<li><strong>НФТ-6.6</strong> — Пользовательский интерфейс должен отображать дату и время тренировки с учетом часового пояса пользователя.</li>
+<li><strong>НФТ-6.7</strong> — Пользователь из другого часового пояса должен видеть время тренировки в своем локальном часовом поясе.</li>
+<li><strong>НФТ-6.8</strong> — При создании тренировки система должна сохранять однозначный момент начала и окончания тренировки независимо от часового пояса пользователя.</li>
+</ul>
+<h2 id="7">7. Целостность данных</h2>
+<h3 id="71">7.1. Временные ограничения</h3>
+<ul>
+<li><strong>НФТ-7.1</strong> — Система должна запрещать создание тренировки, у которой время начала не раньше времени окончания.</li>
+<li><strong>НФТ-7.2</strong> — Система должна запрещать изменение тренировки, если после изменения время начала не раньше времени окончания.</li>
+</ul>
+<h3 id="72">7.2. Отображение удаленных данных</h3>
+<ul>
+<li><strong>НФТ-7.3</strong> — Мягко удаленные пользователи не должны отображаться в списке активных пользователей.</li>
+<li><strong>НФТ-7.4</strong> — Мягко удаленные группы не должны отображаться в списке групп тренера.</li>
+<li><strong>НФТ-7.5</strong> — Мягко удаленные упражнения не должны отображаться в библиотеке упражнений.</li>
+<li><strong>НФТ-7.6</strong> — Мягко удаленные тренировки не должны отображаться в обычных списках и календаре тренировок.</li>
+</ul>
+<h3 id="73">7.3. Связность данных</h3>
+<ul>
+<li><strong>НФТ-7.7</strong> — Задание тренировки должно сохранять связь с упражнением после назначения.</li>
+<li><strong>НФТ-7.8</strong> — Результат задания должен сохранять связь с заданием тренировки.</li>
+<li><strong>НФТ-7.9</strong> — История результатов должна оставаться доступной для анализа после мягкого удаления упражнения.</li>
+</ul>
+<h2 id="8">8. Масштабируемость и изоляция организаций</h2>
+<h3 id="81">8.1. Масштабируемость</h3>
+<ul>
+<li><strong>НФТ-8.1</strong> — Система должна допускать увеличение числа тренеров с 50 до 200 без изменения пользовательских сценариев.</li>
+<li><strong>НФТ-8.2</strong> — При увеличении числа тренеров до 200 система должна сохранять авторизацию и разграничение доступа по ролям.</li>
+<li><strong>НФТ-8.3</strong> — При увеличении числа тренеров до 200 система должна сохранять поддержку постраничной загрузки списков пользователей, упражнений и тренировок.</li>
+</ul>
+<h3 id="82">8.2. Организации</h3>
+<ul>
+<li><strong>НФТ-8.4</strong> — Система должна поддерживать работу нескольких школ или организаций.</li>
+<li><strong>НФТ-8.5</strong> — Данные одной школы или организации должны быть изолированы от данных другой школы или организации.</li>
+<li><strong>НФТ-8.6</strong> — Пользователь одной школы или организации не должен получать доступ к спортсменам, группам, тренировкам и упражнениям другой школы или организации.</li>
+</ul>
+<h2 id="9-api">9. Документация API</h2>
+<ul>
+<li><strong>НФТ-9.1</strong> — API системы должен быть описан в формате OpenAPI.</li>
+<li><strong>НФТ-9.2</strong> — Описание OpenAPI должно содержать список доступных endpoints.</li>
+<li><strong>НФТ-9.3</strong> — Описание OpenAPI должно содержать схемы запросов и ответов.</li>
+<li><strong>НФТ-9.4</strong> — Описание OpenAPI должно содержать сведения о требованиях к авторизации защищенных endpoints.</li>
+</ul>
+<h2 id="10">10. Логирование и мониторинг</h2>
+<h3 id="101">10.1. Логирование ошибок</h3>
+<ul>
+<li><strong>НФТ-10.1</strong> — Система должна логировать серверные ошибки.</li>
+<li><strong>НФТ-10.2</strong> — Запись о серверной ошибке должна содержать дату и время возникновения ошибки.</li>
+<li><strong>НФТ-10.3</strong> — Запись о серверной ошибке должна содержать технический код или описание ошибки.</li>
+</ul>
+<h3 id="102">10.2. Логирование пользовательских действий</h3>
+<ul>
+<li><strong>НФТ-10.4</strong> — Система должна логировать создание тренировки.</li>
+<li><strong>НФТ-10.5</strong> — Система должна логировать изменение тренировки.</li>
+<li><strong>НФТ-10.6</strong> — Система должна логировать изменение результата задания.</li>
+<li><strong>НФТ-10.7</strong> — Система должна логировать мягкое удаление спортсмена.</li>
+<li><strong>НФТ-10.8</strong> — Система должна логировать мягкое удаление тренировки.</li>
+</ul>
+<h3 id="103">10.3. Мониторинг</h3>
+<ul>
+<li><strong>НФТ-10.9</strong> — Система должна собирать метрику доступности API.</li>
+<li><strong>НФТ-10.10</strong> — Система должна собирать метрику количества серверных ошибок.</li>
+<li><strong>НФТ-10.11</strong> — Система должна собирать метрику времени ответа API.</li>
+<li><strong>НФТ-10.12</strong> — Метрики мониторинга должны позволять проверить выполнение требований по доступности и времени ответа.</li>
+</ul>
+<h2 id="11_1">11. Резервное копирование и восстановление</h2>
+<h3 id="111">11.1. Резервное копирование</h3>
+<ul>
+<li><strong>НФТ-11.1</strong> — База данных должна резервироваться не реже одного раза в сутки.</li>
+<li><strong>НФТ-11.2</strong> — Резервная копия должна содержать данные пользователей, групп, упражнений, тренировок, заданий и результатов.</li>
+<li><strong>НФТ-11.3</strong> — Система должна хранить не менее одной актуальной резервной копии базы данных.</li>
+</ul>
+<h3 id="112">11.2. Восстановление</h3>
+<ul>
+<li><strong>НФТ-11.4</strong> — Должна быть предусмотрена процедура восстановления базы данных из резервной копии.</li>
+<li><strong>НФТ-11.5</strong> — После восстановления из резервной копии пользовательские данные должны быть доступны через стандартные пользовательские сценарии.</li>
+<li><strong>НФТ-11.6</strong> — После восстановления из резервной копии система должна сохранять связи между пользователями, группами, упражнениями, тренировками, заданиями и результатами.</li>
+</ul>
+<h2 id="12_1">12. Локализация</h2>
+<ul>
+<li><strong>НФТ-12.1</strong> — Пользовательский интерфейс системы должен быть на русском языке.</li>
+<li><strong>НФТ-12.2</strong> — Пользовательские статусы тренировок должны отображаться на русском языке.</li>
+<li><strong>НФТ-12.3</strong> — Пользовательские статусы заданий должны отображаться на русском языке.</li>
+<li><strong>НФТ-12.4</strong> — Сообщения об ошибках, отображаемые пользователю, должны быть на русском языке.</li>
+<li><strong>НФТ-12.5</strong> — Даты и время должны отображаться в формате, понятном русскоязычному пользователю.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["content.code.copy"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u0432 \u0431\u0443\u0444\u0435\u0440", "clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0432 \u0431\u0443\u0444\u0435\u0440", "search.result.more.one": "\u0415\u0449\u0451 1 \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.more.other": "\u0415\u0449\u0451 # \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.none": "\u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", "search.result.one": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e 1 \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0435", "search.result.other": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439: #", "search.result.placeholder": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u043f\u0435\u0447\u0430\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", "search.result.term.missing": "\u041e\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442", "select.version": "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044e"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.50899def.min.js"></script>
+      
+    
+  </body>
+</html>
