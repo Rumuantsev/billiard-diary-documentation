@@ -1,131 +1,182 @@
 @startuml
 
-' Abstract class User
+skinparam linetype ortho
+skinparam classAttributeIconSize 0
+skinparam class {
+  BackgroundColor White
+  BorderColor Black
+}
+
+left to right direction
+
 abstract class User {
-  +id: bigint
-  +email: varchar
-  +password_hash: varchar
-  +last_name: varchar
-  +first_name: varchar
-  +middle_name: varchar
-  +birth_date: date
-  +created_at: timestamptz
-  +updated_at: timestamptz
-  +deleted_at: timestamptz?
+  +email
+  +passwordHash
+  +name
+  +authenticate()
+  +updateProfile()
+}
+
+class Admin {
+  +createCoach()
+  +viewUsers()
+  +editUser()
+  +viewExerciseLibrary()
+  +editExercise()
 }
 
 class Coach {
+  +createAthlete()
+  +editAthlete()
+  +softDeleteAthlete()
+  +createGroup()
+  +editGroup()
+  +addAthleteToGroup()
+  +removeAthleteFromGroup()
+  +createExercise()
+  +editExercise()
+  +softDeleteExercise()
+  +createFolder()
+  +renameFolder()
+  +softDeleteFolder()
+  +createGroupTraining()
+  +editScheduledTraining()
+  +changeTrainingStatus()
+  +softDeleteTraining()
+  +recordAttendance()
+  +viewAnalytics()
+  +addComment()
 }
 
 class Athlete {
+  +viewAssignedTrainings()
+  +viewTrainingHistory()
+  +startTraining()
+  +completeTraining()
+  +startTrainingItem()
+  +completeTrainingItem()
+  +skipTrainingItem()
+  +recordResult()
+  +viewResults()
+  +viewCoachComments()
+  +addNote()
 }
 
 class Group {
-  +id: bigint
-  +name: varchar
-  +description: text?
-  +created_at: timestamptz
-  +updated_at: timestamptz
-  +deleted_at: timestamptz?
-}
-
-class Exercise {
-  +id: bigint
-  +name: varchar
-  +description: text
-  +required_reps: int
-  +success_threshold: int
-  +is_public: boolean
-  +created_at: timestamptz
-  +updated_at: timestamptz
-  +deleted_at: timestamptz?
-}
-
-class Position {
-  +id: bigint
-  +layout: jsonb
-  +power: int
-  +created_at: timestamptz
-  +updated_at: timestamptz
+  +name
+  +description
+  +addAthlete()
+  +removeAthlete()
+  +rename()
 }
 
 class Folder {
-  +id: bigint
-  +name: varchar
-  +created_at: timestamptz
-  +updated_at: timestamptz
+  +title
+  +rename()
+  +softDelete()
 }
 
-class Workout {
-  +id: bigint
-  +date: date
-  +created_at: timestamptz
-  +updated_at: timestamptz
+class Exercise {
+  +title
+  +description
+  +position
+  +createCopy()
+  +updatePosition()
+  +updateShotParameters()
+  +softDelete()
 }
 
-class WorkoutItem {
-  +id: bigint
-  +order_index: int
-  +result: int
-  +max_value: int
-  +pass_threshold: int
+class GroupTraining {
+  +startsAt
+  +endsAt
+  +status
+  +schedule()
+  +reschedule()
+  +cancel()
+  +markMissed()
+  +start()
+  +complete()
+  +softDelete()
 }
 
-class Comment {
-  +id: bigint
-  +target_type: enum {workout, workout_item}
-  +text: text
-  +created_at: timestamptz
-  +updated_at: timestamptz
-  +deleted_at: timestamptz?
+class AthleteTraining {
+  +startsAt
+  +endsAt
+  +status
+  +start()
+  +complete()
+  +addTrainingItem()
+  +removeTrainingItem()
+}
+
+class TrainingItem {
+  +orderIndex
+  +targetAttempts
+  +resultAttempts
+  +resultSuccesses
+  +status
+  +start()
+  +complete()
+  +skip()
+  +recordResult()
 }
 
 class Attendance {
-  +id: bigint
-  +date: date
-  +status: enum {present, absent, late}
-  +reason: text?
-  +created_at: timestamptz
+  +attendanceDate
+  +status
+  +markPresent()
+  +markAbsent()
 }
 
-' Inheritance
+class Comment {
+  +text
+  +create()
+  +edit()
+  +softDelete()
+}
+
+class AnalyticsReport {
+  +period
+  +groupFilter
+  +athleteFilter
+  +exerciseFilter
+  +calculateAttendance()
+  +calculatePerformance()
+  +calculateExerciseProgress()
+}
+
+User <|-- Admin
 User <|-- Coach
 User <|-- Athlete
 
-' Composition: Position is part of Exercise
-Exercise *-- Position 
+Coach "1" -- "0..*" Athlete : coaches
+Coach "1" -- "0..*" Group : owns
+Coach "1" -- "0..*" Folder : owns
+Coach "1" -- "0..*" Exercise : authors
+Coach "1" -- "0..*" GroupTraining : schedules
+Coach "1" -- "0..*" Comment : writes
 
-' Composition: WorkoutItem is part of Workout
-Workout *-- WorkoutItem 
+Group "1" -- "0..*" Athlete : contains
+Group "1" -- "0..*" GroupTraining : has
 
-' Aggregation: Folder contains exercises
-Folder o-- Exercise 
+Folder "0..1" -- "0..*" Folder : parent folder
+Folder "0..1" o-- "0..*" Exercise : contains
 
-' Aggregation: Group unites athletes
-Group "1" o-- "0..*" Athlete 
+Exercise "1" -- "0..*" TrainingItem : assigned as
 
-' Associations for Coach
-Coach "1" -- "0..*" Exercise 
-Coach "1" -- "0..*" Workout 
-Coach "1" -- "0..*" Group 
-Coach "1" -- "0..*" Folder 
+GroupTraining "1" *-- "1..*" AthleteTraining : consists of
+Athlete "1" -- "0..*" AthleteTraining : performs
+AthleteTraining "1" *-- "0..*" TrainingItem : contains
+AthleteTraining "1" -- "0..1" Attendance : has
 
-' Associations for Athlete
-Athlete "1" -- "0..*" Workout
-Athlete "1" -- "0..*" Attendance 
+TrainingItem "1" -- "0..*" Comment : has
+AthleteTraining "1" -- "0..*" Comment : has
+GroupTraining "1" -- "0..*" Comment : has
+Athlete "1" -- "0..*" Comment : writes notes
 
-' Associations for Comment
-Coach "1" -- "0..*" Comment 
-Athlete "1" -- "0..*" Comment
-
-' Associations for WorkoutItem
-Exercise "1" -- "0..*" WorkoutItem 
-
-' Polymorphic associations for Comment
-Comment --> Workout 
-Comment --> WorkoutItem 
-
-' Recursive relationship for folders
-Folder --> "parent" Folder
+AnalyticsReport ..> GroupTraining : uses
+AnalyticsReport ..> AthleteTraining : uses
+AnalyticsReport ..> TrainingItem : uses
+AnalyticsReport ..> Attendance : uses
 
 @enduml

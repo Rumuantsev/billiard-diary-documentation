@@ -1,0 +1,108 @@
+@startuml
+left to right direction
+
+skinparam packageStyle rectangle
+skinparam usecase {
+  BackgroundColor White
+  BorderColor Black
+}
+skinparam actor {
+  BorderColor Black
+}
+
+actor "Тренер" as coach
+
+rectangle "Электронный дневник бильярдиста" {
+  package "Спортсмены и группы" {
+    usecase "Создать спортсмена" as UC_COACH_CREATE_ATHLETE
+    usecase "Редактировать профиль спортсмена" as UC_COACH_EDIT_ATHLETE
+    usecase "Выполнить мягкое удаление спортсмена" as UC_COACH_DELETE_ATHLETE
+    usecase "Просмотреть карточку спортсмена" as UC_COACH_VIEW_ATHLETE
+    usecase "Создать группу" as UC_COACH_CREATE_GROUP
+    usecase "Редактировать группу" as UC_COACH_EDIT_GROUP
+    usecase "Добавить спортсмена в группу" as UC_COACH_ADD_TO_GROUP
+    usecase "Удалить спортсмена из группы" as UC_COACH_REMOVE_FROM_GROUP
+    usecase "Просмотреть карточку группы" as UC_COACH_VIEW_GROUP
+  }
+
+  package "Упражнения" {
+    usecase "Создать упражнение" as UC_COACH_CREATE_EXERCISE
+    usecase "Настроить схему позиции" as UC_COACH_EDIT_POSITION
+    usecase "Настроить винт и силу удара" as UC_COACH_EDIT_SHOT_PARAMS
+    usecase "Редактировать упражнение" as UC_COACH_EDIT_EXERCISE
+    usecase "Выполнить мягкое удаление упражнения" as UC_COACH_DELETE_EXERCISE
+    usecase "Искать упражнение" as UC_COACH_SEARCH_EXERCISE
+    usecase "Создать папку упражнений" as UC_COACH_CREATE_FOLDER
+    usecase "Переименовать папку упражнений" as UC_COACH_RENAME_FOLDER
+    usecase "Выполнить мягкое удаление папки упражнений" as UC_COACH_DELETE_FOLDER
+    usecase "Просмотреть упражнения папки" as UC_COACH_VIEW_FOLDER_EXERCISES
+    usecase "Использовать публичную библиотеку упражнений" as UC_COACH_PUBLIC_LIBRARY
+    usecase "Создать копию упражнения" as UC_COACH_COPY_EXERCISE
+  }
+
+  package "Тренировки" {
+    usecase "Просмотреть календарь тренировок" as UC_COACH_VIEW_CALENDAR
+    usecase "Создать тренировку для группы" as UC_COACH_CREATE_TRAINING
+    usecase "Выбрать группу тренировки" as UC_COACH_SELECT_GROUP
+    usecase "Указать дату и время тренировки" as UC_COACH_SET_TIME
+    usecase "Назначить упражнения спортсменам" as UC_COACH_ASSIGN_ITEMS
+    usecase "Задать план попыток" as UC_COACH_SET_TARGET
+    usecase "Редактировать запланированную тренировку" as UC_COACH_EDIT_TRAINING
+    usecase "Отменить тренировку" as UC_COACH_CANCEL_TRAINING
+    usecase "Отметить тренировку пропущенной" as UC_COACH_MISS_TRAINING
+    usecase "Выполнить мягкое удаление тренировки" as UC_COACH_DELETE_TRAINING
+    usecase "Просмотреть результаты выполнения" as UC_COACH_VIEW_RESULTS
+  }
+
+  package "Посещаемость и аналитика" {
+    usecase "Фиксировать посещаемость" as UC_COACH_ATTENDANCE
+    usecase "Просмотреть посещаемость за период" as UC_COACH_VIEW_ATTENDANCE
+    usecase "Просмотреть аналитику посещаемости" as UC_COACH_ANALYTICS_ATTENDANCE
+    usecase "Просмотреть аналитику результативности" as UC_COACH_ANALYTICS_PERFORMANCE
+    usecase "Просмотреть прогресс по упражнениям" as UC_COACH_ANALYTICS_PROGRESS
+    usecase "Фильтровать аналитику" as UC_COACH_FILTER_ANALYTICS
+  }
+
+  package "Комментарии" {
+    usecase "Оставить комментарий к тренировке" as UC_COACH_COMMENT_TRAINING
+    usecase "Оставить комментарий к заданию" as UC_COACH_COMMENT_ITEM
+    usecase "Просмотреть заметки спортсмена" as UC_COACH_VIEW_NOTES
+  }
+}
+
+coach --> UC_COACH_CREATE_ATHLETE
+coach --> UC_COACH_EDIT_ATHLETE
+coach --> UC_COACH_DELETE_ATHLETE
+coach --> UC_COACH_VIEW_ATHLETE
+coach --> UC_COACH_CREATE_GROUP
+coach --> UC_COACH_EDIT_GROUP
+coach --> UC_COACH_ADD_TO_GROUP
+coach --> UC_COACH_REMOVE_FROM_GROUP
+coach --> UC_COACH_VIEW_GROUP
+coach --> UC_COACH_CREATE_EXERCISE
+coach --> UC_COACH_EDIT_EXERCISE
+coach --> UC_COACH_DELETE_EXERCISE
+coach --> UC_COACH_SEARCH_EXERCISE
+coach --> UC_COACH_CREATE_FOLDER
+coach --> UC_COACH_RENAME_FOLDER
+coach --> UC_COACH_DELETE_FOLDER
+coach --> UC_COACH_VIEW_FOLDER_EXERCISES
+coach --> UC_COACH_PUBLIC_LIBRARY
+coach --> UC_COACH_COPY_EXERCISE
+coach --> UC_COACH_VIEW_CALENDAR
+coach --> UC_COACH_CREATE_TRAINING
+coach --> UC_COACH_EDIT_TRAINING
+coach --> UC_COACH_CANCEL_TRAINING
+coach --> UC_COACH_MISS_TRAINING
+coach --> UC_COACH_DELETE_TRAINING
+coach --> UC_COACH_VIEW_RESULTS
+coach --> UC_COACH_ATTENDANCE
+coach --> UC_COACH_VIEW_ATTENDANCE
+coach --> UC_COACH_ANALYTICS_ATTENDANCE
+coach --> UC_COACH_ANALYTICS_PERFORMANCE
+coach --> UC_COACH_ANALYTICS_PROGRESS
+coach --> UC_COACH_COMMENT_TRAINING
+coach --> UC_COACH_COMMENT_ITEM
+coach --> UC_COACH_VIEW_NOTES
+
+@enduml
