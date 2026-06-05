@@ -1,10 +1,11 @@
 @startuml
 left to right direction
 
-skinparam packageStyle rectangle
+skinparam shadowing false
 skinparam usecase {
   BackgroundColor White
   BorderColor Black
+  FontSize 12
 }
 skinparam actor {
   BorderColor Black
@@ -13,50 +14,17 @@ skinparam actor {
 actor "Спортсмен" as athlete
 
 rectangle "Электронный дневник бильярдиста" {
-  package "Тренировки" {
-    usecase "Просмотреть сегодняшнюю тренировку" as UC_ATHLETE_TODAY
-    usecase "Просмотреть назначенные тренировки" as UC_ATHLETE_VIEW_TRAININGS
-    usecase "Просмотреть историю тренировок" as UC_ATHLETE_HISTORY
-    usecase "Начать тренировку" as UC_ATHLETE_START_TRAINING
-    usecase "Завершить тренировку" as UC_ATHLETE_FINISH_TRAINING
-  }
-
-  package "Задания" {
-    usecase "Просмотреть свои задания" as UC_ATHLETE_VIEW_ITEMS
-    usecase "Открыть задание" as UC_ATHLETE_OPEN_ITEM
-    usecase "Просмотреть упражнение" as UC_ATHLETE_VIEW_EXERCISE
-    usecase "Начать выполнение задания" as UC_ATHLETE_START_ITEM
-    usecase "Зафиксировать количество попыток" as UC_ATHLETE_SET_ATTEMPTS
-    usecase "Зафиксировать успешные попытки" as UC_ATHLETE_SET_SUCCESSES
-    usecase "Завершить задание" as UC_ATHLETE_COMPLETE_ITEM
-    usecase "Пропустить задание" as UC_ATHLETE_SKIP_ITEM
-  }
-
-  package "Результаты и обратная связь" {
-    usecase "Просмотреть свои результаты" as UC_ATHLETE_VIEW_RESULTS
-    usecase "Просмотреть личный прогресс" as UC_ATHLETE_VIEW_PROGRESS
-    usecase "Просмотреть комментарии тренера" as UC_ATHLETE_VIEW_COMMENTS
-    usecase "Оставить заметку к тренировке" as UC_ATHLETE_NOTE_TRAINING
-    usecase "Оставить заметку к заданию" as UC_ATHLETE_NOTE_ITEM
-  }
+  usecase "Просматривать\nназначенные тренировки" as UC_VIEW_TRAININGS
+  usecase "Видеть назначенные\nупражнения" as UC_VIEW_EXERCISES
+  usecase "Фиксировать\nрезультаты выполнения" as UC_RECORD_RESULTS
+  usecase "Просматривать\nисторию тренировок" as UC_VIEW_HISTORY
+  usecase "Получать обратную\nсвязь тренера" as UC_VIEW_FEEDBACK
 }
 
-athlete --> UC_ATHLETE_TODAY
-athlete --> UC_ATHLETE_VIEW_TRAININGS
-athlete --> UC_ATHLETE_HISTORY
-athlete --> UC_ATHLETE_START_TRAINING
-athlete --> UC_ATHLETE_FINISH_TRAINING
-athlete --> UC_ATHLETE_VIEW_ITEMS
-athlete --> UC_ATHLETE_OPEN_ITEM
-athlete --> UC_ATHLETE_START_ITEM
-athlete --> UC_ATHLETE_SET_ATTEMPTS
-athlete --> UC_ATHLETE_SET_SUCCESSES
-athlete --> UC_ATHLETE_COMPLETE_ITEM
-athlete --> UC_ATHLETE_SKIP_ITEM
-athlete --> UC_ATHLETE_VIEW_RESULTS
-athlete --> UC_ATHLETE_VIEW_PROGRESS
-athlete --> UC_ATHLETE_VIEW_COMMENTS
-athlete --> UC_ATHLETE_NOTE_TRAINING
-athlete --> UC_ATHLETE_NOTE_ITEM
+athlete --> UC_VIEW_TRAININGS
+athlete --> UC_VIEW_EXERCISES
+athlete --> UC_RECORD_RESULTS
+athlete --> UC_VIEW_HISTORY
+athlete --> UC_VIEW_FEEDBACK
 
 @enduml

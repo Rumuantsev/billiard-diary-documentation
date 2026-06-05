@@ -1,14 +1,43 @@
 @startuml
 ' ER-диаграмма базы данных на русском языке.
-' Высокоуровневый вариант для заказчика: без технических дат и типов.
+' Презентационный вариант: без технических дат и типов.
 
+title ER-диаграмма базы данных
+
+left to right direction
+
+skinparam shadowing false
 skinparam linetype ortho
+skinparam roundcorner 8
+skinparam nodesep 55
+skinparam ranksep 45
+skinparam classAttributeIconSize 0
+hide circle
+
 skinparam entity {
-  BackgroundColor White
-  BorderColor Black
+  BackgroundColor #FFFFFF
+  BorderColor #1F2937
+  FontColor #111827
+  FontSize 12
+  FontStyle plain
+  Padding 10
+  StereotypeFontSize 0
 }
 
-entity "Пользователь" as пользователь {
+skinparam Arrow {
+  Color #475569
+  FontColor #334155
+  FontSize 10
+  Thickness 1
+}
+
+entity "Роль пользователя" as role {
+  администратор
+  тренер
+  спортсмен
+}
+
+entity "Пользователь" as user {
   email
   хеш пароля
   имя
@@ -16,38 +45,34 @@ entity "Пользователь" as пользователь {
   тренер
 }
 
-entity "Роль пользователя" as роль {
-  администратор
-  тренер
-  спортсмен
-}
-
-entity "Папка" as папка {
+entity "Папка" as folder {
   название
   автор
   родительская папка
+  публичная
 }
 
-entity "Упражнение" as упражнение {
+entity "Упражнение" as exercise {
   название
   описание
-  позиция
+  позиция шаров
   автор
   папка
+  публичное
 }
 
-entity "Группа" as группа {
+entity "Группа" as group {
   название
   тренер
   описание
 }
 
-entity "Спортсмен в группе" as спортсменВГруппе {
+entity "Спортсмен в группе" as athlete_group {
   спортсмен
   группа
 }
 
-entity "Групповая тренировка" as групповаяТренировка {
+entity "Групповая тренировка" as group_training {
   тренер
   группа
   начало
@@ -55,16 +80,17 @@ entity "Групповая тренировка" as групповаяТрени
   статус
 }
 
-entity "Тренировка спортсмена" as тренировкаСпортсмена {
+entity "Тренировка спортсмена" as athlete_training {
   групповая тренировка
   тренер
   спортсмен
   начало
   окончание
   статус
+  статус посещения
 }
 
-entity "Элемент тренировки" as элементТренировки {
+entity "Элемент тренировки" as training_item {
   тренировка спортсмена
   упражнение
   порядок
@@ -74,46 +100,49 @@ entity "Элемент тренировки" as элементТренировк
   статус
 }
 
-entity "Посещаемость" as посещаемость {
-  спортсмен
-  дата посещения
-  статус
-}
 
-entity "Комментарий" as комментарий {
+entity "Комментарий" as comment {
   автор
-  групповая тренировка
   тренировка спортсмена
-  элемент тренировки
   текст
 }
 
-пользователь --{ пользователь : тренер
-роль --{ пользователь : роль
+' Основной поток чтения диаграммы слева направо.
+role -[hidden]right- user
+user -[hidden]right- folder
+folder -[hidden]right- group
+group -[hidden]right- group_training
+group_training -[hidden]right- comment
 
-пользователь --{ папка : автор
-папка --{ папка : родительская папка
-пользователь --{ упражнение : автор
-папка --{ упражнение : папка
+' Локальное выравнивание внутри смысловых блоков.
+folder -[hidden]down- exercise
+group -[hidden]down- athlete_group
+group_training -[hidden]down- athlete_training
+athlete_training -[hidden]down- training_item
 
-пользователь --{ группа : тренер
-пользователь --{ спортсменВГруппе : спортсмен
-группа --{ спортсменВГруппе : группа
+user --{ user : тренер
+role --{ user : роль
 
-пользователь --{ групповаяТренировка : тренер
-группа --{ групповаяТренировка : группа
-групповаяТренировка --{ тренировкаСпортсмена : групповая тренировка
+user --{ folder : автор
+folder --{ folder : родительская
+user --{ exercise : автор
+folder --{ exercise : папка
 
-пользователь --{ тренировкаСпортсмена : тренер
-пользователь --{ тренировкаСпортсмена : спортсмен
-тренировкаСпортсмена --{ элементТренировки : тренировка спортсмена
-упражнение --{ элементТренировки : упражнение
+user --{ group : тренер
+user --{ athlete_group : спортсмен
+group --{ athlete_group : группа
 
-пользователь --{ посещаемость : спортсмен
+user --{ group_training : тренер
+group --{ group_training : группа
+group_training --{ athlete_training : групповая
 
-пользователь --{ комментарий : автор
-групповаяТренировка --{ комментарий : групповая тренировка
-тренировкаСпортсмена --{ комментарий : тренировка спортсмена
-элементТренировки --{ комментарий : элемент тренировки
+user --{ athlete_training : тренер
+user --{ athlete_training : спортсмен
+athlete_training --{ training_item : тренировка
+exercise --{ training_item : упражнение
+
+
+user --{ comment : автор
+athlete_training --{ comment : тренировка
 
 @enduml

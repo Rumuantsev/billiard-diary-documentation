@@ -1,0 +1,133 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+skinparam actorStyle awesome
+skinparam usecase {
+  BackgroundColor #FFFFFF
+  BorderColor #222222
+  ArrowColor #222222
+}
+
+actor "Пользователь" as User
+actor "Администратор" as Admin
+actor "Тренер" as Coach
+actor "Спортсмен" as Athlete
+
+User <|-- Admin
+User <|-- Coach
+User <|-- Athlete
+
+rectangle "Информационная система сопровождения тренировочного процесса" {
+
+  usecase "Авторизоваться\nв системе" as UC_Login
+
+  package "Администрирование" {
+    usecase "Управлять\nпользователями" as UC_ManageUsers
+    usecase "Создать учетную\nзапись тренера" as UC_CreateCoach
+    usecase "Редактировать\nучетные записи" as UC_EditUsers
+    usecase "Контролировать\nпубличную библиотеку" as UC_ModeratePublicLibrary
+  }
+
+  package "Организация спортсменов и групп" {
+    usecase "Создать профиль\nспортсмена" as UC_CreateAthlete
+    usecase "Управлять\nгруппами" as UC_ManageGroups
+    usecase "Добавить спортсмена\nв группу" as UC_AddAthleteToGroup
+    usecase "Исключить спортсмена\nиз группы" as UC_RemoveAthleteFromGroup
+  }
+
+  package "Упражнения и библиотека" {
+    usecase "Управлять личной\nбиблиотекой упражнений" as UC_ManageExerciseLibrary
+    usecase "Создать\nупражнение" as UC_CreateExercise
+    usecase "Редактировать\nупражнение" as UC_EditExercise
+    usecase "Работать\nс папками" as UC_Folders
+    usecase "Опубликовать упражнение\nв публичной библиотеке" as UC_PublishExercise
+    usecase "Просмотреть публичную\nбиблиотеку упражнений" as UC_ViewPublicLibrary
+  }
+
+  package "Планирование тренировки" {
+    usecase "Создать\nтренировку" as UC_CreateTraining
+    usecase "Выбрать группу\nили спортсмена" as UC_SelectParticipants
+    usecase "Назначить\nзадания" as UC_AssignTasks
+    usecase "Выбрать упражнение\nдля задания" as UC_SelectExercise
+    usecase "Указать плановое\nколичество попыток" as UC_SetPlanAttempts
+  }
+
+  package "Выполнение тренировки" {
+    usecase "Просмотреть назначенную\nтренировку" as UC_ViewAssignedTraining
+    usecase "Открыть\nупражнение" as UC_OpenExercise
+    usecase "Выполнить\nзадание" as UC_DoTask
+    usecase "Зафиксировать\nрезультат" as UC_RecordResult
+    usecase "Указать количество\nпопыток" as UC_SetAttempts
+    usecase "Указать количество\nуспешных попыток" as UC_SetSuccessAttempts
+    usecase "Завершить\nтренировку" as UC_FinishTraining
+  }
+
+  package "Аналитика и обратная связь" {
+    usecase "Просмотреть историю\nтренировок" as UC_ViewHistory
+    usecase "Просмотреть результаты\nспортсменов" as UC_ViewResults
+    usecase "Просмотреть\nаналитику" as UC_ViewAnalytics
+    usecase "Оставить комментарий\nк тренировке или заданию" as UC_AddComment
+    usecase "Ознакомиться\nс комментарием тренера" as UC_ReadComment
+  }
+}
+
+User --> UC_Login
+
+Admin --> UC_ManageUsers
+Admin --> UC_ModeratePublicLibrary
+
+Coach --> UC_CreateAthlete
+Coach --> UC_ManageGroups
+Coach --> UC_ManageExerciseLibrary
+Coach --> UC_ViewPublicLibrary
+Coach --> UC_CreateTraining
+Coach --> UC_ViewResults
+Coach --> UC_ViewAnalytics
+Coach --> UC_AddComment
+Coach --> UC_ViewHistory
+
+Athlete --> UC_ViewAssignedTraining
+Athlete --> UC_OpenExercise
+Athlete --> UC_DoTask
+Athlete --> UC_RecordResult
+Athlete --> UC_FinishTraining
+Athlete --> UC_ViewHistory
+Athlete --> UC_ReadComment
+
+UC_ManageUsers .> UC_CreateCoach : <<include>>
+UC_ManageUsers .> UC_EditUsers : <<include>>
+
+UC_ManageGroups .> UC_AddAthleteToGroup : <<include>>
+UC_ManageGroups .> UC_RemoveAthleteFromGroup : <<include>>
+
+UC_ManageExerciseLibrary .> UC_CreateExercise : <<include>>
+UC_ManageExerciseLibrary .> UC_EditExercise : <<include>>
+UC_ManageExerciseLibrary .> UC_Folders : <<include>>
+UC_ManageExerciseLibrary .> UC_PublishExercise : <<extend>>
+
+UC_CreateTraining .> UC_SelectParticipants : <<include>>
+UC_CreateTraining .> UC_AssignTasks : <<include>>
+UC_AssignTasks .> UC_SelectExercise : <<include>>
+UC_AssignTasks .> UC_SetPlanAttempts : <<include>>
+
+UC_ViewAssignedTraining .> UC_OpenExercise : <<include>>
+UC_DoTask .> UC_RecordResult : <<include>>
+UC_RecordResult .> UC_SetAttempts : <<include>>
+UC_RecordResult .> UC_SetSuccessAttempts : <<include>>
+
+UC_ViewResults .> UC_ViewHistory : <<include>>
+UC_ViewAnalytics .> UC_ViewResults : <<include>>
+
+UC_ModeratePublicLibrary .. UC_PublishExercise : "проверка опубликованных\nупражнений"
+UC_AssignTasks .. UC_ViewAssignedTraining : "после назначения\nзадание доступно спортсмену"
+UC_RecordResult .. UC_ViewResults : "после фиксации\nрезультат доступен тренеру"
+UC_AddComment .. UC_ReadComment : "комментарий тренера\nдоступен спортсмену"
+
+note right of UC_AssignTasks
+Use case-диаграмма не показывает
+строгую временную последовательность.
+Связи отражают функциональную
+зависимость сценариев внутри системы.
+end note
+
+@enduml

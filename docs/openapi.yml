@@ -23,6 +23,8 @@ tags:
     description: Coach group management endpoints
   - name: Trainings
     description: Individual and group training endpoints
+  - name: Analytics
+    description: Read-only coach analytics endpoints
 
 paths:
   /health:
@@ -999,6 +1001,166 @@ paths:
         "500":
           $ref: "#/components/responses/InternalError"
 
+  /trainings/athlete/{id}/attendance:
+    patch:
+      tags: [Trainings]
+      summary: Update athlete training attendance
+      description: >
+        Coach-only endpoint. `attendanceStatus` is the source of truth for attendance analytics.
+        When set to `absent`, active training items of this athlete training are soft-deleted.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/TrainingId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateAttendanceStatusRequest"
+            example:
+              attendanceStatus: absent
+      responses:
+        "200":
+          description: Attendance status updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AthleteTrainingResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /trainings/athlete/{id}/comments:
+    get:
+      tags: [Trainings]
+      summary: Get athlete training comments
+      description: >
+        Returns comments only for the concrete athlete training from the URL.
+        Coach may read own athlete training comments. Athlete may read comments inside own athlete training.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/TrainingId"
+      responses:
+        "200":
+          description: Comments returned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TrainingCommentListResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    post:
+      tags: [Trainings]
+      summary: Create athlete training comment
+      description: Coach-only endpoint. Creates a comment inside one concrete athlete training.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/TrainingId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TrainingCommentRequest"
+            example:
+              text: Good long pot progress today, but speed control still needs attention.
+      responses:
+        "201":
+          description: Comment created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TrainingCommentResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /trainings/athlete/{id}/comments/{commentId}:
+    patch:
+      tags: [Trainings]
+      summary: Update athlete training comment
+      description: Coach-only endpoint. `commentId` must belong to the same athlete training from the URL and to the current author.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/TrainingId"
+        - $ref: "#/components/parameters/TrainingCommentId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TrainingCommentRequest"
+            example:
+              text: Updated coach comment.
+      responses:
+        "200":
+          description: Comment updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TrainingCommentResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    delete:
+      tags: [Trainings]
+      summary: Soft-delete athlete training comment
+      description: Coach-only endpoint. Soft-deletes own comment inside the concrete athlete training.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/TrainingId"
+        - $ref: "#/components/parameters/TrainingCommentId"
+      responses:
+        "200":
+          description: Comment soft-deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TrainingCommentResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalError"
   /trainings/athlete/{id}/items:
     post:
       tags: [Trainings]
@@ -1173,6 +1335,134 @@ paths:
         "500":
           $ref: "#/components/responses/InternalError"
 
+  /analytics/filters:
+    get:
+      tags: [Analytics]
+      summary: Get analytics filters
+      description: >
+        Coach-only endpoint. Returns groups, athletes and exercises allowed by analytics filter rules.
+        Without groupId, athletes is an empty list. With athleteId, exercises are limited to completed exercises of this athlete in the selected period.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/AnalyticsDateFrom"
+        - $ref: "#/components/parameters/AnalyticsDateTo"
+        - $ref: "#/components/parameters/AnalyticsGroupId"
+        - $ref: "#/components/parameters/AnalyticsAthleteId"
+        - $ref: "#/components/parameters/AnalyticsExerciseId"
+      responses:
+        "200":
+          description: Analytics filters returned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnalyticsFiltersResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /analytics/attendance:
+    get:
+      tags: [Analytics]
+      summary: Get attendance analytics
+      description: >
+        Coach-only endpoint. Uses athleteTraining.attendanceStatus as the source of truth.
+        exerciseId is not accepted by this endpoint.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/AnalyticsDateFrom"
+        - $ref: "#/components/parameters/AnalyticsDateTo"
+        - $ref: "#/components/parameters/AnalyticsGroupId"
+        - $ref: "#/components/parameters/AnalyticsAthleteId"
+      responses:
+        "200":
+          description: Attendance analytics returned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnalyticsAttendanceResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /analytics/performance:
+    get:
+      tags: [Analytics]
+      summary: Get performance analytics
+      description: Coach-only endpoint. Returns accuracy, assigned/completed item volume and summary/detail table.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/AnalyticsDateFrom"
+        - $ref: "#/components/parameters/AnalyticsDateTo"
+        - $ref: "#/components/parameters/AnalyticsGroupId"
+        - $ref: "#/components/parameters/AnalyticsAthleteId"
+        - $ref: "#/components/parameters/AnalyticsExerciseId"
+      responses:
+        "200":
+          description: Performance analytics returned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnalyticsPerformanceResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /analytics/progress:
+    get:
+      tags: [Analytics]
+      summary: Get exercise progress analytics
+      description: >
+        Coach-only endpoint. Aggregates completed training items by athleteId + exerciseId pair.
+        Trend is growth, decline or stable based on delta between first and last execution averages.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/AnalyticsDateFrom"
+        - $ref: "#/components/parameters/AnalyticsDateTo"
+        - $ref: "#/components/parameters/AnalyticsGroupId"
+        - $ref: "#/components/parameters/AnalyticsAthleteId"
+        - $ref: "#/components/parameters/AnalyticsExerciseId"
+      responses:
+        "200":
+          description: Progress analytics returned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnalyticsProgressResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalError"
   /exercises:
     get:
       tags: [Exercises]
@@ -1460,6 +1750,64 @@ components:
       in: path
       required: true
       description: Training item id.
+      schema:
+        type: integer
+        minimum: 1
+
+    TrainingCommentId:
+      name: commentId
+      in: path
+      required: true
+      description: Athlete training comment id.
+      schema:
+        type: integer
+        minimum: 1
+
+    AnalyticsDateFrom:
+      name: dateFrom
+      in: query
+      required: false
+      description: Optional analytics period start.
+      schema:
+        type: string
+        minLength: 10
+        maxLength: 35
+        example: "2026-06-01"
+
+    AnalyticsDateTo:
+      name: dateTo
+      in: query
+      required: false
+      description: Optional analytics period end.
+      schema:
+        type: string
+        minLength: 10
+        maxLength: 35
+        example: "2026-06-30"
+
+    AnalyticsGroupId:
+      name: groupId
+      in: query
+      required: false
+      description: Optional group filter. Without groupId analytics is calculated for the whole coach school.
+      schema:
+        type: integer
+        minimum: 1
+
+    AnalyticsAthleteId:
+      name: athleteId
+      in: query
+      required: false
+      description: Optional athlete filter. Requires groupId.
+      schema:
+        type: integer
+        minimum: 1
+
+    AnalyticsExerciseId:
+      name: exerciseId
+      in: query
+      required: false
+      description: Optional exercise filter. Not accepted by attendance endpoint.
       schema:
         type: integer
         minimum: 1
@@ -2013,6 +2361,20 @@ components:
           enum: [scheduled, in_progress, completed, cancelled, missed]
           example: in_progress
 
+
+    AttendanceStatus:
+      type: string
+      enum: [unknown, present, absent]
+      example: present
+
+    UpdateAttendanceStatusRequest:
+      type: object
+      required: [attendanceStatus]
+      additionalProperties: false
+      properties:
+        attendanceStatus:
+          $ref: "#/components/schemas/AttendanceStatus"
+
     UpdateTrainingItemRequest:
       type: object
       minProperties: 1
@@ -2111,6 +2473,72 @@ components:
         item:
           $ref: "#/components/schemas/TrainingItem"
 
+
+    TrainingCommentRequest:
+      type: object
+      required: [text]
+      additionalProperties: false
+      properties:
+        text:
+          type: string
+          minLength: 1
+          maxLength: 4000
+          example: Good long pot progress today, but speed control still needs attention.
+
+    TrainingComment:
+      type: object
+      required: [id, athleteTrainingId, authorId, text, createdAt, updatedAt]
+      properties:
+        id:
+          type: string
+          example: 1
+        athleteTrainingId:
+          type: string
+          example: 10
+        authorId:
+          type: string
+          example: 2
+        authorName:
+          type: string
+          nullable: true
+          example: Coach User
+        text:
+          type: string
+          example: Good long pot progress today, but speed control still needs attention.
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    TrainingCommentResponse:
+      type: object
+      required: [ok, comment]
+      properties:
+        ok:
+          type: boolean
+          enum: [true]
+          example: true
+        comment:
+          $ref: "#/components/schemas/TrainingComment"
+
+    TrainingCommentListResponse:
+      type: object
+      required: [ok, comments]
+      properties:
+        ok:
+          type: boolean
+          enum: [true]
+          example: true
+        comments:
+          type: array
+          items:
+            $ref: "#/components/schemas/TrainingComment"
     TrainingEnvelope:
       type: object
       required: [type]
@@ -2168,7 +2596,7 @@ components:
     AthleteTraining:
       type: object
       required:
-        [id, coachId, athleteId, startsAt, endsAt, status, createdAt, updatedAt]
+        [id, coachId, athleteId, startsAt, endsAt, status, attendanceStatus, createdAt, updatedAt]
       properties:
         id:
           type: string
@@ -2194,6 +2622,8 @@ components:
         status:
           type: string
           example: scheduled
+        attendanceStatus:
+          $ref: "#/components/schemas/AttendanceStatus"
         itemsCount:
           type: integer
           nullable: true
@@ -2460,6 +2890,372 @@ components:
           type: number
           example: 240
 
+
+    AnalyticsFiltersResponse:
+      type: object
+      required: [ok, filters]
+      properties:
+        ok:
+          type: boolean
+          enum: [true]
+          example: true
+        filters:
+          type: object
+          required: [groups, athletes, exercises]
+          properties:
+            groups:
+              type: array
+              items:
+                $ref: "#/components/schemas/Group"
+            athletes:
+              type: array
+              items:
+                $ref: "#/components/schemas/UserCamel"
+            exercises:
+              type: array
+              items:
+                $ref: "#/components/schemas/ExerciseCamel"
+
+    AnalyticsAttendanceResponse:
+      type: object
+      required: [ok, attendance]
+      properties:
+        ok:
+          type: boolean
+          enum: [true]
+          example: true
+        attendance:
+          type: object
+          required: [kpi, byDate, byTraining, byAthlete]
+          properties:
+            kpi:
+              type: object
+              required: [presentCount, missedCount, attendanceRate, riskAthletes]
+              properties:
+                presentCount:
+                  type: integer
+                  example: 12
+                missedCount:
+                  type: integer
+                  example: 3
+                attendanceRate:
+                  type: integer
+                  example: 80
+                riskAthletes:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/AnalyticsAttendanceByAthlete"
+            byDate:
+              type: array
+              items:
+                $ref: "#/components/schemas/AnalyticsAttendanceByDate"
+            byTraining:
+              type: array
+              items:
+                $ref: "#/components/schemas/AnalyticsAttendanceByTraining"
+            byAthlete:
+              type: array
+              items:
+                $ref: "#/components/schemas/AnalyticsAttendanceByAthlete"
+
+    AnalyticsAttendanceByDate:
+      type: object
+      properties:
+        date:
+          type: string
+          example: "2026-06-01"
+        presentCount:
+          type: integer
+        missedCount:
+          type: integer
+        attendanceRate:
+          type: integer
+
+    AnalyticsAttendanceByTraining:
+      type: object
+      properties:
+        groupTrainingId:
+          type: string
+          nullable: true
+        athleteTrainingId:
+          type: string
+          nullable: true
+        date:
+          type: string
+          example: "2026-06-01"
+        groupId:
+          type: string
+          nullable: true
+        groupName:
+          type: string
+          nullable: true
+        presentCount:
+          type: integer
+        missedCount:
+          type: integer
+        attendanceRate:
+          type: integer
+
+    AnalyticsAttendanceByAthlete:
+      type: object
+      properties:
+        athleteId:
+          type: string
+        athleteName:
+          type: string
+        groupId:
+          type: string
+          nullable: true
+        groupName:
+          type: string
+          nullable: true
+        presentCount:
+          type: integer
+        missedCount:
+          type: integer
+        attendanceRate:
+          type: integer
+        lastTrainingAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    AnalyticsPerformanceResponse:
+      type: object
+      required: [ok, performance]
+      properties:
+        ok:
+          type: boolean
+          enum: [true]
+          example: true
+        performance:
+          type: object
+          required: [kpi, accuracyByDate, volumeByDate, table]
+          properties:
+            kpi:
+              type: object
+              required: [accuracy, assignedItemsCount, completedItemsCount, totalAttempts]
+              properties:
+                accuracy:
+                  type: integer
+                  example: 62
+                assignedItemsCount:
+                  type: integer
+                  example: 20
+                completedItemsCount:
+                  type: integer
+                  example: 18
+                totalAttempts:
+                  type: integer
+                  example: 180
+            accuracyByDate:
+              type: array
+              items:
+                $ref: "#/components/schemas/AnalyticsAccuracyByDate"
+            volumeByDate:
+              type: array
+              items:
+                $ref: "#/components/schemas/AnalyticsVolumeByDate"
+            table:
+              type: object
+              required: [mode, rows]
+              properties:
+                mode:
+                  type: string
+                  enum: [summary, detail]
+                rows:
+                  type: array
+                  items:
+                    oneOf:
+                      - $ref: "#/components/schemas/AnalyticsPerformanceSummaryRow"
+                      - $ref: "#/components/schemas/AnalyticsPerformanceDetailRow"
+
+    AnalyticsAccuracyByDate:
+      type: object
+      properties:
+        date:
+          type: string
+          example: "2026-06-01"
+        attempts:
+          type: integer
+        successes:
+          type: integer
+        accuracy:
+          type: integer
+
+    AnalyticsVolumeByDate:
+      type: object
+      properties:
+        date:
+          type: string
+          example: "2026-06-01"
+        assigned:
+          type: integer
+        completed:
+          type: integer
+
+    AnalyticsPerformanceSummaryRow:
+      type: object
+      properties:
+        athleteTrainingId:
+          type: string
+        groupTrainingId:
+          type: string
+          nullable: true
+        date:
+          type: string
+          example: "2026-06-01"
+        athleteId:
+          type: string
+        athleteName:
+          type: string
+        groupId:
+          type: string
+          nullable: true
+        groupName:
+          type: string
+          nullable: true
+        attendanceStatus:
+          $ref: "#/components/schemas/AttendanceStatus"
+        assignedItemsCount:
+          type: integer
+        completedItemsCount:
+          type: integer
+        totalAttempts:
+          type: integer
+        totalSuccesses:
+          type: integer
+        accuracy:
+          type: integer
+
+    AnalyticsPerformanceDetailRow:
+      type: object
+      properties:
+        date:
+          type: string
+          example: "2026-06-01"
+        athleteTrainingId:
+          type: string
+        groupTrainingId:
+          type: string
+          nullable: true
+        athleteId:
+          type: string
+        athleteName:
+          type: string
+        groupId:
+          type: string
+          nullable: true
+        groupName:
+          type: string
+          nullable: true
+        exerciseId:
+          type: string
+        exerciseTitle:
+          type: string
+        targetAttempts:
+          type: integer
+          nullable: true
+        resultAttempts:
+          type: integer
+          nullable: true
+        resultSuccesses:
+          type: integer
+          nullable: true
+        status:
+          type: string
+          enum: [not_started, in_progress, completed, skipped]
+        accuracy:
+          type: integer
+
+    AnalyticsProgressResponse:
+      type: object
+      required: [ok, progress]
+      properties:
+        ok:
+          type: boolean
+          enum: [true]
+          example: true
+        progress:
+          type: object
+          required: [pairsCount, growthCount, declineCount, stableCount, chartSeries, rows]
+          properties:
+            pairsCount:
+              type: integer
+            growthCount:
+              type: integer
+            declineCount:
+              type: integer
+            stableCount:
+              type: integer
+            chartSeries:
+              type: array
+              items:
+                $ref: "#/components/schemas/AnalyticsProgressSeries"
+            rows:
+              type: array
+              items:
+                $ref: "#/components/schemas/AnalyticsProgressRow"
+
+    AnalyticsProgressSeries:
+      type: object
+      properties:
+        athleteId:
+          type: string
+        athleteName:
+          type: string
+        exerciseId:
+          type: string
+        exerciseTitle:
+          type: string
+        trend:
+          $ref: "#/components/schemas/AnalyticsTrend"
+        points:
+          type: array
+          items:
+            type: object
+            properties:
+              date:
+                type: string
+                example: "2026-06-01"
+              accuracy:
+                type: integer
+
+    AnalyticsProgressRow:
+      type: object
+      properties:
+        athleteId:
+          type: string
+        athleteName:
+          type: string
+        groupId:
+          type: string
+          nullable: true
+        groupName:
+          type: string
+          nullable: true
+        exerciseId:
+          type: string
+        exerciseTitle:
+          type: string
+        executions:
+          type: integer
+        attempts:
+          type: integer
+        avgAccuracy:
+          type: integer
+        firstAvg:
+          type: integer
+        lastAvg:
+          type: integer
+        delta:
+          type: integer
+        trend:
+          $ref: "#/components/schemas/AnalyticsTrend"
+
+    AnalyticsTrend:
+      type: string
+      enum: [growth, decline, stable]
     ErrorResponse:
       type: object
       required: [ok, code, message]

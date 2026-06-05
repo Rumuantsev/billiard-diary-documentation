@@ -1,7 +1,5 @@
 @startuml
-' ER-диаграмма базы данных (PostgreSQL)
 
-' Настройки внешнего вида
 skinparam linetype ortho
 skinparam entity {
   BackgroundColor White
@@ -16,45 +14,31 @@ skinparam node {
   BorderColor Black
 }
 
-' Размещение сущностей по сетке
 left to right direction
 
-' Сущности
-entity "user" as users {
+entity "users" as users {
   + id: bigserial <<PK>>
   --
-  group_id: bigint <<FK>>
   email: varchar(255) <<unique>>
-  password_hash: varchar(255)
-  last_name: varchar(100)
-  first_name: varchar(100)
-  middle_name: varchar(100)
-  birth_date: date
+  password_hash: text
+  name: varchar(255)
   role: user_role
+  coach_id: bigint <<FK users.id>>
   created_at: timestamptz
   updated_at: timestamptz
   deleted_at: timestamptz
 }
 
-entity "group" as groups {
+entity "folders" as folders {
   + id: bigserial <<PK>>
   --
-  name: varchar(255)
-  coach_id: bigint <<FK>>
-  description: text
+  title: varchar(255)
+  author_id: bigint <<FK users.id>>
+  parent_id: bigint <<FK folders.id>>
+  is_public: boolean
   created_at: timestamptz
   updated_at: timestamptz
   deleted_at: timestamptz
-}
-
-entity "folder" as folders {
-  + id: bigserial <<PK>>
-  --
-  name: varchar(255)
-  owner_id: bigint <<FK>>
-  parent_folder_id: bigint <<FK>>
-  created_at: timestamptz
-  updated_at: timestamptz
 }
 
 entity "exercise" as exercises {
@@ -62,89 +46,112 @@ entity "exercise" as exercises {
   --
   title: varchar(255)
   description: text
-  position : jsonb
-  author_id: bigint <<FK>>
-  folder_id: bigint <<FK>>
+  position: jsonb
+  author_id: bigint <<FK users.id>>
+  folder_id: bigint <<FK folders.id>>
+  is_public: boolean
   created_at: timestamptz
   updated_at: timestamptz
   deleted_at: timestamptz
 }
 
-entity "workout" as workouts {
+entity "groups" as groups {
   + id: bigserial <<PK>>
   --
-  date: date
-  athlete_id: bigint <<FK>>
-  coach_id: bigint <<FK>>
+  name: varchar(255)
+  coach_id: bigint <<FK users.id>>
+  description: text
   created_at: timestamptz
   updated_at: timestamptz
+  deleted_at: timestamptz
 }
 
-entity "workout_item" as workout_items {
+entity "athlete_groups" as athlete_groups {
   + id: bigserial <<PK>>
   --
-  workout_id: bigint <<FK>>
-  exercise_id: bigint <<FK>>
-  order_index: int
-  result: int
-  max_value: int
-  pass_threshold: int
+  athlete_id: bigint <<FK users.id>>
+  group_id: bigint <<FK groups.id>>
+  created_at: timestamptz
+  deleted_at: timestamptz
+}
+
+entity "group_training" as group_trainings {
+  + id: bigserial <<PK>>
+  --
+  coach_id: bigint <<FK users.id>>
+  group_id: bigint <<FK groups.id>>
+  starts_at: timestamptz
+  ends_at: timestamptz
+  status: varchar(50)
   created_at: timestamptz
   updated_at: timestamptz
+  deleted_at: timestamptz
 }
 
-entity "comment" as comments {
+entity "athlete_training" as athlete_trainings {
   + id: bigserial <<PK>>
   --
-  author_id: bigint <<FK>>
-  workout_id: bigint <<FK>>
-  workout_item_id: bigint <<FK>>
+  group_training_id: bigint <<FK group_training.id>>
+  coach_id: bigint <<FK users.id>>
+  athlete_id: bigint <<FK users.id>>
+  starts_at: timestamptz
+  ends_at: timestamptz
+  status: varchar(50)
+  attendance_status: varchar(30)
+  created_at: timestamptz
+  updated_at: timestamptz
+  deleted_at: timestamptz
+}
+
+entity "training_item" as training_items {
+  + id: bigserial <<PK>>
+  --
+  athlete_training_id: bigint <<FK athlete_training.id>>
+  exercise_id: bigint <<FK exercise.id>>
+  order_index: integer
+  target_attempts: integer
+  result_attempts: integer
+  result_successes: integer
+  status: varchar(50)
+  created_at: timestamptz
+  updated_at: timestamptz
+  deleted_at: timestamptz
+}
+
+entity "athlete_training_comments" as athlete_training_comments {
+  + id: bigserial <<PK>>
+  --
+  athlete_training_id: bigint <<FK athlete_training.id>>
+  author_id: bigint <<FK users.id>>
   text: text
   created_at: timestamptz
   updated_at: timestamptz
   deleted_at: timestamptz
 }
 
-entity "attendance" as attendances {
-  + id: bigserial <<PK>>
-  --
-  athlete_id: bigint <<FK>>
-  group_id: bigint <<FK>>
-  date: date
-  status: attendance_status
-  reason: text
-  created_at: timestamptz
-}
+users |o--o{ users : "coach_id"
 
-' Связи (без указания внешних ключей)
-users --> groups
 
-groups --> users
+users ||--o{ folders : "author_id"
+folders |o--o{ folders : "parent_id"
+users ||--o{ exercises : "author_id"
+folders ||--o{ exercises : "folder_id"
 
-users --> folders
+users ||--o{ groups : "coach_id"
+users ||--o{ athlete_groups : "athlete_id"
+groups ||--o{ athlete_groups : "group_id"
 
-folders --> folders
+users ||--o{ group_trainings : "coach_id"
+groups ||--o{ group_trainings : "group_id"
+group_trainings ||--o{ athlete_trainings : "group_training_id"
 
-users --> exercises
+users ||--o{ athlete_trainings : "coach_id"
+users ||--o{ athlete_trainings : "athlete_id"
+athlete_trainings ||--o{ training_items : "athlete_training_id"
+exercises ||--o{ training_items : "exercise_id"
 
-folders --> exercises
 
-users --> workouts
-
-users --> workouts
-
-workouts --> workout_items
-
-exercises --> workout_items
-
-users --> comments
-
-workouts --> comments
-
-workout_items --> comments
-
-users --> attendances
-
-groups --> attendances
+users ||--o{ athlete_training_comments : "author_id"
+athlete_trainings ||--o{ athlete_training_comments : "athlete_training_id"
 
 @enduml

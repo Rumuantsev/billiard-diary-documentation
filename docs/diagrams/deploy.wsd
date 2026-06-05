@@ -1,0 +1,36 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Deployment.puml
+
+LAYOUT_LEFT_RIGHT()
+
+title Схема развертывания
+
+Person(trainer, "Тренер", "Создает группы, упражнения, тренировки и анализирует результаты")
+Person(athlete, "Спортсмен", "Просматривает назначенные тренировки и фиксирует результаты")
+Person(admin, "Администратор", "Сопровождает пользователей и общие настройки системы")
+
+Deployment_Node(userDevice, "Пользовательское устройство", "ПК / ноутбук / планшет") {
+    Container(browser, "Веб-браузер", "Chrome / Edge / Firefox / Safari", "Средство доступа к пользовательскому интерфейсу")
+}
+
+Deployment_Node(server, "Сервер развертывания", "Linux, Docker") {
+
+    Deployment_Node(frontendContainer, "Frontend-контейнер", "nginx") {
+        Container(frontend, "billiard_diary_frontend", "React, Vite, nginx", "Пользовательский интерфейс тренера, спортсмена и администратора")
+    }
+
+    Deployment_Node(composeEnvironment, "Docker Compose-контур", "backend и PostgreSQL") {
+        Container(backend, "billiard_diary_backend", "Node.js, Express", "REST API, авторизация, бизнес-логика и обработка тренировочных данных")
+        ContainerDb(database, "billiard_diary_db", "PostgreSQL", "Хранение пользователей, групп, упражнений, тренировок, результатов и комментариев")
+    }
+}
+
+Rel(trainer, browser, "Работает через")
+Rel(athlete, browser, "Работает через")
+Rel(admin, browser, "Работает через")
+
+Rel(browser, frontend, "Получает веб-интерфейс", "HTTP")
+Rel(browser, backend, "Отправляет запросы к API", "HTTP / REST")
+Rel(backend, database, "Читает и изменяет данные", "SQL")
+
+@enduml
