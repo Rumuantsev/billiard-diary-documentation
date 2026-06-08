@@ -153,6 +153,6 @@
 - **US-8.4** — Я как спортсмен хочу оставлять заметку к тренировке или заданию, чтобы передать тренеру свои ощущения и наблюдения. **(P2)**
 
 <figure markdown="span">
-	![UseCases](out/diagrams/ER/useCases.png){align=center}
+	![UseCases](../out/diagrams/UseCases/UCcoach.png){align=center}
   <figcaption>Use Cases</figcaption>
 </figure>

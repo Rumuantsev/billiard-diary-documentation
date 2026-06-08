@@ -23,6 +23,22 @@ theme:
   features:
     - content.code.copy
   custom_dir: overrides
+
+nav:
+  - Главная: index.md
+  - Требования:
+      - Глоссарий: Требования/1glossary.md
+      - Пользовательские требования: Требования/1user-requirement.md
+      - Функциональные требования: Требования/functional-requirement.md
+      - Нефункциональные требования: Требования/non-functional-requirement.md
+  - Диаграммы:
+      - Бизнес-модель: Диаграммы/Бизнес-модель.md
+      - Use Case: Диаграммы/USE CASE.md
+      - Модель данных: Диаграммы/Модель данных.md
+      - Классы: Диаграммы/Классы.md
+  - Инструкция разработчика: Инструкция разработчика.md
+  - API: OpenAPI.md
+
 plugins:
   - swagger-ui-tag
 markdown_extensions:
