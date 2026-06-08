@@ -22,7 +22,10 @@ class Admin {
   +viewUsers()
   +editUser()
   +viewExerciseLibrary()
-  +editExercise()
+  +createPublicFolder()
+  +editPublicFolder()
+  +createPublicExercise()
+  +editPublicExercise()
 }
 
 class Coach {
@@ -39,6 +42,8 @@ class Coach {
   +createFolder()
   +renameFolder()
   +softDeleteFolder()
+  +viewPublicLibrary()
+  +usePublicExercise()
   +createGroupTraining()
   +editScheduledTraining()
   +changeTrainingStatus()
@@ -46,6 +51,8 @@ class Coach {
   +recordAttendance()
   +viewAnalytics()
   +addComment()
+  +editComment()
+  +softDeleteComment()
 }
 
 class Athlete {
@@ -59,7 +66,6 @@ class Athlete {
   +recordResult()
   +viewResults()
   +viewCoachComments()
-  +addNote()
 }
 
 class Group {
@@ -72,6 +78,8 @@ class Group {
 
 class Folder {
   +title
+  +parentId
+  +isPublic
   +rename()
   +softDelete()
 }
@@ -80,6 +88,7 @@ class Exercise {
   +title
   +description
   +position
+  +isPublic
   +createCopy()
   +updatePosition()
   +updateShotParameters()
@@ -103,10 +112,13 @@ class AthleteTraining {
   +startsAt
   +endsAt
   +status
+  +attendanceStatus
   +start()
   +complete()
   +addTrainingItem()
   +removeTrainingItem()
+  +markPresent()
+  +markAbsent()
 }
 
 class TrainingItem {
@@ -121,12 +133,6 @@ class TrainingItem {
   +recordResult()
 }
 
-class Attendance {
-  +attendanceDate
-  +status
-  +markPresent()
-  +markAbsent()
-}
 
 class Comment {
   +text
@@ -135,48 +141,31 @@ class Comment {
   +softDelete()
 }
 
-class AnalyticsReport {
-  +period
-  +groupFilter
-  +athleteFilter
-  +exerciseFilter
-  +calculateAttendance()
-  +calculatePerformance()
-  +calculateExerciseProgress()
-}
-
 User <|-- Admin
 User <|-- Coach
 User <|-- Athlete
 
-Coach "1" -- "0..*" Athlete : coaches
-Coach "1" -- "0..*" Group : owns
-Coach "1" -- "0..*" Folder : owns
-Coach "1" -- "0..*" Exercise : authors
-Coach "1" -- "0..*" GroupTraining : schedules
-Coach "1" -- "0..*" Comment : writes
+Admin "1" --> "0..*" Folder : manages public
+Admin "1" --> "0..*" Exercise : manages public
 
-Group "1" -- "0..*" Athlete : contains
-Group "1" -- "0..*" GroupTraining : has
+Coach "1" --> "0..*" Athlete : coaches
+Coach "1" --> "0..*" Group : owns
+Coach "1" --> "0..*" Folder : owns
+Coach "1" --> "0..*" Exercise : authors
+Coach "1" --> "0..*" GroupTraining : schedules
+Coach "1" --> "0..*" Comment : writes
 
-Folder "0..1" -- "0..*" Folder : parent folder
+Group "0..*" --> "0..*" Athlete : contains
+Group "0..1" --> "0..*" GroupTraining : has
+
+Folder "0..1" --> "0..*" Folder : parent folder
 Folder "0..1" o-- "0..*" Exercise : contains
 
-Exercise "1" -- "0..*" TrainingItem : assigned as
+Exercise "1" --> "0..*" TrainingItem : assigned as
 
-GroupTraining "1" *-- "1..*" AthleteTraining : consists of
-Athlete "1" -- "0..*" AthleteTraining : performs
+GroupTraining "0..1" o-- "0..*" AthleteTraining : consists of
+Athlete "1" --> "0..*" AthleteTraining : performs
 AthleteTraining "1" *-- "0..*" TrainingItem : contains
-AthleteTraining "1" -- "0..1" Attendance : has
 
-TrainingItem "1" -- "0..*" Comment : has
-AthleteTraining "1" -- "0..*" Comment : has
-GroupTraining "1" -- "0..*" Comment : has
-Athlete "1" -- "0..*" Comment : writes notes
-
-AnalyticsReport ..> GroupTraining : uses
-AnalyticsReport ..> AthleteTraining : uses
-AnalyticsReport ..> TrainingItem : uses
-AnalyticsReport ..> Attendance : uses
-
+AthleteTraining "1" --> "0..*" Comment : has
 @enduml
